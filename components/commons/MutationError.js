@@ -9,7 +9,7 @@ import {
 } from '@material-ui/core'
 
 const MutationError = (props) => {
-  const { title = 'Fehler', content } = props
+  const { title = 'Error fatal', content } = props
   const [error, setError] = useState()
 
   useEffect(() => setError(props.apolloError), [props.apolloError])
@@ -22,7 +22,7 @@ const MutationError = (props) => {
       <DialogContent>
         <Typography gutterBottom>{content}</Typography>
         <details>
-          <summary>Technische Informationen: {error?.message}</summary>
+          <summary>Technical Mubmle Jumble: {error?.message}</summary>
           <pre>{JSON.stringify(error?.graphQLErrors, null, 2)}</pre>
         </details>
       </DialogContent>

@@ -1,5 +1,6 @@
 const bcrypt = require('bcrypt')
 const ogs = require('open-graph-scraper')
+const { isEmail, isAlphanumeric } = require('validator')
 
 const DateTime = require('./scalar/DateTime')
 
@@ -8,7 +9,9 @@ const contentInsert = async ({ url }, { pgdb }) => {
 
   const { result } = await ogs({ url }).catch((e) => {
     console.error(e)
-    throw new Error('Diese URL lässt sich nicht laden')
+    throw new Error(
+      'In a devestating attempt, we were unable to fetch said URL.',
+    )
   })
 
   return contents.insertAndGet({
@@ -41,17 +44,32 @@ const resolvers = {
   },
   Query: {
     me: async (parent, args, context, info) => {
-      return context.getUser()
+      const { user } = context
+      return user
     },
     categories: async (parent, args, context, info) => {
-      return context.pgdb.public.categories.findAll({
-        orderBy: { title: 'DESC' },
+      const { user, pgdb } = context
+
+      if (!user) {
+        throw new Error(
+          'You will have to login or sign up first. No sneak peak.',
+        )
+      }
+
+      return pgdb.public.categories.findAll({
+        orderBy: { title: 'ASC' },
       })
     },
     submissions: async (parent, args, context, info) => {
       const { stage, category_id } = args
-      const { pgdb } = context
+      const { pgdb, user } = context
       const submissions = pgdb.public.submissions
+
+      if (!user) {
+        throw new Error(
+          'You will have to login or sign up first. No sneak peak.',
+        )
+      }
 
       const conditions = {
         ...(stage && { stage }),
@@ -64,10 +82,12 @@ const resolvers = {
   Mutation: {
     submit: async (parent, args, context, info) => {
       const { comment, url, category_id } = args
-      const { pgdb, login, user } = context
+      const { pgdb, user } = context
 
       if (!user) {
-        throw new Error('Du musst dich erst anmelden.')
+        throw new Error(
+          'You will have to login or sign up first. No anon data.',
+        )
       }
 
       const categories = pgdb.public.categories
@@ -76,7 +96,9 @@ const resolvers = {
 
       const category = await categories.findOne({ id: category_id })
       if (!category) {
-        throw new Error('Kategorie war beim besten Wille nicht aufzufinden')
+        throw new Error(
+          'After many, many attempts, we are fairly certain: category ID seems wrong.',
+        )
       }
 
       const content =
@@ -95,59 +117,98 @@ const resolvers = {
     },
     categoryAdd: async (parent, args, context, info) => {
       const { title } = args
-      const { pgdb } = context
+      const { pgdb, user } = context
+
+      if (!user) {
+        throw new Error('You will have to login or sign up first.')
+      }
 
       const categories = pgdb.public.categories
 
       if (await categories.count({ title })) {
-        throw new Error('Titel der Kategorie existiert bereits')
+        throw new Error("I am sorry, Dave, I can' do that.")
       }
 
       return categories.insertAndGet({ title })
     },
     signup: async (parent, args, context, info) => {
       const { email, username, password } = args
-      const { pgdb, login } = context
+      const { pgdb, login, user } = context
+
+      if (user) {
+        throw new Error('Logged in you are. Not signup you can.')
+      }
+
+      if (!isEmail(email)) {
+        throw new Error('You submitted something, but not an email address.')
+      }
+
+      if (!isAlphanumeric(username)) {
+        throw new Error('Yeah, no, that username is DECLINED!')
+      }
+
+      if (password.length < 6) {
+        throw new Error('Your password is simply to short.')
+      }
 
       // @TODO prevent signup when authorized
-      // @TODO add some rudementary validation, email, username
 
       const hasUser = await pgdb.public.users.count({
         or: [{ email }, { username }],
       })
 
       if (hasUser) {
-        throw new Error('Konto gibts schon')
+        throw new Error(
+          'Like Liam Neeson: Either email address or username is taken.',
+        )
       }
 
       const hash = await bcrypt.hash(password, 10)
-      const user = await pgdb.public.users.insertAndGet({
+      const newUser = await pgdb.public.users.insertAndGet({
         email,
         username,
         hash,
       })
 
-      await login(user)
+      await login(newUser)
 
-      return user
+      return newUser
     },
     login: async (parent, args, context, info) => {
-      const { username, password } = args
+      const { username, password, user } = args
 
-      // @TODO prevent login when authorized
+      if (user) {
+        throw new Error('Logged in you are. Not login again you can.')
+      }
 
-      const { user } = await context.authenticate('graphql-local', {
-        email: username,
-        password,
-      })
+      if (!isAlphanumeric(username)) {
+        throw new Error('Yeah, no, that username is DECLINED!')
+      }
 
-      await context.login(user)
+      if (password.length < 6) {
+        throw new Error('Your password is simply to short.')
+      }
 
-      return user
+      const { user: authenticatedUser } = await context.authenticate(
+        'graphql-local',
+        {
+          email: username,
+          password,
+        },
+      )
+
+      await context.login(authenticatedUser)
+
+      return authenticatedUser
     },
     logout: async (parent, args, context, info) => {
-      await context.logout()
-      context.req.session.destroy()
+      const { user, logout, req } = context
+      if (!user) {
+        throw new Error('Not logged in you are already.')
+      }
+
+      await logout()
+      req.session.destroy()
 
       return true
     },

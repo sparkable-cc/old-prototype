@@ -46,6 +46,7 @@
     "react-hook-form": "^7.2.1",
     "react-player": "^2.6.2",
     "react-responsive-carousel": "^3.2.10",
-    "throng": "^5.0.0"
+    "throng": "^5.0.0",
+    "validator": "^13.6.0"
   }
 }

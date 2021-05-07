@@ -104,16 +104,21 @@ nextApp
             or: [{ username }, { email: username }],
           })
           if (!user) {
-            throw new Error('Sowat hamwa hier nich')
+            throw new Error('User not found')
           }
           if (!(await bcrypt.compare(password, user.hash))) {
-            throw new Error('Passwort stimmt sowas von nicht, ey')
+            throw new Error('Password mismatch')
           }
 
           done(null, user)
         } catch (e) {
           console.error(e)
-          done(new Error('Anmeldung schlug grandios fehl'), null)
+          done(
+            new Error(
+              'Either we do not know your or your password is waaaaay off.',
+            ),
+            null,
+          )
         }
       }),
     )

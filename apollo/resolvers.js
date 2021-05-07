@@ -14,7 +14,7 @@ const contentInsert = async ({ url }, { pgdb }) => {
   return contents.insertAndGet({
     url,
     type: 'web',
-    title: result?.ogTitle || result?.twitterTitle,
+    title: result?.ogTitle || result?.twitterTitle || result?.ogSiteName || url,
     description: result?.ogDescription || result?.twitterDescription,
     teaser_image_url: result?.ogImage?.url || result?.twitterImage?.url,
     og: result,

@@ -1,0 +1,10 @@
+version: '3.4'
+services:
+  postgres:
+    image: postgres:13
+    env_file: .env
+    volumes:
+      - ./data/postgres:/var/lib/postgresql/data:delegated
+    ports:
+      - 5432:5432
+    command: ['postgres', '-c', 'log_statement=all']

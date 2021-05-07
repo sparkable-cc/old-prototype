@@ -1,27 +1,29 @@
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
 CREATE EXTENSION IF NOT EXISTS citext WITH SCHEMA public;
 
 -- sessions
 -- @see https://github.com/voxpelli/node-connect-pg-simple/blob/v6.2.1/table.sql
 -- renamed session to sessions
-
 CREATE TABLE "sessions" (
   "sid" varchar NOT NULL COLLATE "default",
   "sess" json NOT NULL,
   "expire" timestamp(6) NOT NULL
 )
-WITH (OIDS=FALSE);
+WITH (
+  OIDS = FALSE
+);
 
-ALTER TABLE "sessions" ADD CONSTRAINT "sessions_pkey" PRIMARY KEY ("sid") NOT DEFERRABLE INITIALLY IMMEDIATE;
+ALTER TABLE "sessions"
+  ADD CONSTRAINT "sessions_pkey" PRIMARY KEY ("sid") NOT DEFERRABLE INITIALLY IMMEDIATE;
 
 CREATE INDEX "IDX_sessions_expire" ON "sessions" ("expire");
 
 --
 -- Version 0.0.1-alpha-vorversion
 --
-
 CREATE TABLE users (
-  id uuid DEFAULT uuid_generate_v4() PRIMARY KEY,
+  id uuid DEFAULT uuid_generate_v4 () PRIMARY KEY,
   email citext NOT NULL,
   username citext NOT NULL,
   bio text,
@@ -29,18 +31,19 @@ CREATE TABLE users (
   country text,
   stage citext,
   picture_url citext,
-  date_created timestamp with time zone NOT NULL,
+  date_created timestamp with time zone NOT NULL DEFAULT now(),
   date_verified timestamp with time zone,
-  tokens integer NOT NULL DEFAULT 0
+  tokens integer NOT NULL DEFAULT 0,
+  hash text NOT NULL
 );
 
 CREATE TABLE categories (
-  id uuid DEFAULT uuid_generate_v4() PRIMARY KEY,
+  id uuid DEFAULT uuid_generate_v4 () PRIMARY KEY,
   title text NOT NULL
 );
 
 CREATE TABLE contents (
-  id uuid DEFAULT uuid_generate_v4() PRIMARY KEY,
+  id uuid DEFAULT uuid_generate_v4 () PRIMARY KEY,
   type citext NOT NULL,
   url citext NOT NULL,
   title text NOT NULL,
@@ -50,19 +53,19 @@ CREATE TABLE contents (
 );
 
 CREATE TABLE submissions (
-  id uuid DEFAULT uuid_generate_v4() PRIMARY KEY,
-  user_id uuid NOT NULL REFERENCES users(id) ON DELETE SET NULL ON UPDATE CASCADE,
-  content_id uuid NOT NULL REFERENCES contents(id) ON DELETE SET NULL ON UPDATE CASCADE,
+  id uuid DEFAULT uuid_generate_v4 () PRIMARY KEY,
+  user_id uuid NOT NULL REFERENCES users (id) ON DELETE SET NULL ON UPDATE CASCADE,
+  content_id uuid NOT NULL REFERENCES contents (id) ON DELETE SET NULL ON UPDATE CASCADE,
   date_posted timestamp with time zone DEFAULT now(),
   comment text,
   stage citext NOT NULL
 );
 
 CREATE TABLE ballots (
-  id uuid DEFAULT uuid_generate_v4() PRIMARY KEY,
-  user_id uuid NOT NULL REFERENCES users(id) ON DELETE SET NULL ON UPDATE CASCADE,
-  vote text,
-  submission_id uuid NOT NULL REFERENCES submissions(id) ON DELETE SET NULL ON UPDATE CASCADE,
+  id uuid DEFAULT uuid_generate_v4 () PRIMARY KEY,
+  user_id uuid NOT NULL REFERENCES users (id) ON DELETE SET NULL ON UPDATE CASCADE,
+  vote citext NOT NULL,
+  submission_id uuid NOT NULL REFERENCES submissions (id) ON DELETE SET NULL ON UPDATE CASCADE,
   dated_voted timestamp with time zone NOT NULL DEFAULT now(),
   stage citext NOT NULL,
   comment text

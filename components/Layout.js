@@ -8,9 +8,9 @@ import {
   IconButton,
   Box,
   Button,
+  Link,
 } from '@material-ui/core'
-import { Menu as MenuIcon } from '@material-ui/icons'
-import Link from 'next/link'
+import { Menu as MenuIcon, Add } from '@material-ui/icons'
 
 import { cdnify } from '../libs/utils'
 import withMe from '../libs/withMe'
@@ -33,23 +33,29 @@ const Layout = function (props) {
               <MenuIcon />
             </IconButton>
             <Box mr={4}>
-              <Typography
-                variant="h6"
-                color="inherit"
-                noWrap
-                onClick={() => router.push('/')}
-              >
-                <Link href="/">Butterfy</Link>
+              <Typography variant="h6" color="inherit" noWrap>
+                <Link color="inherit" onClick={() => router.push('/')}>
+                  Butterfy
+                </Link>
               </Typography>
             </Box>
             <img
-              src="/images/logo_butterfy.png"
-              width="50"
-              height="50"
+              src="/images/butterfy.png"
+              width="45"
+              height="40"
               onClick={() => router.push('/')}
             />
           </Box>
-          {!props.me && (
+          {props.me ? (
+            <>
+              <Button color="inherit" onClick={() => router.push('/submit')}>
+                <Add /> Submit a Link
+              </Button>
+              <AuthLogout>
+                <Button color="inherit">Logout</Button>
+              </AuthLogout>
+            </>
+          ) : (
             <>
               <Button color="inherit" onClick={() => router.push('/login')}>
                 Login
@@ -59,9 +65,6 @@ const Layout = function (props) {
               </Button>
             </>
           )}
-          <AuthLogout>
-            <Button color="inherit">Logout</Button>
-          </AuthLogout>
         </Toolbar>
       </AppBar>
       <Container maxWidth="md">{props.children}</Container>

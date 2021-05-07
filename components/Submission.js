@@ -16,6 +16,7 @@ import ShareIcon from '@material-ui/icons/Share'
 // import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import MoreVertIcon from '@material-ui/icons/MoreVert'
 import Link from '@material-ui/core/Link'
+import { formatDate } from '../libs/date'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -65,7 +66,7 @@ const Submission = ({ submission }) => {
           </IconButton>
         }
         title={submission.content.title}
-        subheader="September 14, 2016"
+        subheader={formatDate(submission.date_posted)}
       />
       <Link href={submission.content.url}>
         <CardMedia

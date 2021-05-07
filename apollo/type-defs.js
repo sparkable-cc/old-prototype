@@ -74,6 +74,7 @@ const typeDefs = gql`
   type Query {
     me: User
     categories: [Category!]!
+    submissions: [Submission!]!
   }
 
   type Mutation {

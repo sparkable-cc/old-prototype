@@ -23,6 +23,22 @@ const contentInsert = async ({ url }, { pgdb }) => {
 
 const resolvers = {
   DateTime,
+  Submission: {
+    category: async (parent, args, context, info) => {
+      const { category_id } = parent
+      const { pgdb } = context
+      const categories = pgdb.public.categories
+
+      return categories.findOne({ id: category_id })
+    },
+    content: async (parent, args, context, info) => {
+      const { content_id } = parent
+      const { pgdb } = context
+      const contents = pgdb.public.contents
+
+      return contents.findOne({ id: content_id })
+    },
+  },
   Query: {
     me: async (parent, args, context, info) => {
       return context.getUser()
@@ -31,6 +47,12 @@ const resolvers = {
       return context.pgdb.public.categories.findAll({
         orderBy: { title: 'DESC' },
       })
+    },
+    submissions: async (parent, args, context, info) => {
+      const { pgdb } = context
+      const submissions = pgdb.public.submissions
+
+      return submissions.findAll()
     },
   },
   Mutation: {

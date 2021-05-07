@@ -81,7 +81,7 @@ INSERT INTO categories ("title")
 --- Version 0.0.3
 ---
 ALTER TABLE contents
-  ADD COLUMN "og" jsonb
+  ADD COLUMN "og" jsonb,
   DROP COLUMN "category_id";
 
 ALTER TABLE submissions

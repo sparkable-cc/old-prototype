@@ -2,35 +2,34 @@ import React from 'react'
 import { gql, useQuery } from '@apollo/client'
 
 export const MeFragment = gql`
-fragment MeFragment on User {
-  id
-  name
-}
+  fragment MeFragment on User {
+    id
+    username
+  }
 `
 
 export const queryWithMe = gql`
-query withMe {
-  me {
-    ...MeFragment
+  query withMe {
+    me {
+      ...MeFragment
+    }
   }
-}
 
-${MeFragment}
+  ${MeFragment}
 `
 
-const withMe = WrappedComponent =>
-  (props) => {
-    const { loading, data = {}, refetch } = useQuery(queryWithMe)
-    const { me } = data
+const withMe = (WrappedComponent) => (props) => {
+  const { loading, data = {}, refetch } = useQuery(queryWithMe)
+  const { me } = data
 
-    return (
-      <WrappedComponent
-        me={me}
-        meLoading={loading}
-        meRefetch={refetch}
-        {...props}
-      />
-    )
-  }
+  return (
+    <WrappedComponent
+      me={me}
+      meLoading={loading}
+      meRefetch={refetch}
+      {...props}
+    />
+  )
+}
 
 export default withMe

@@ -14,6 +14,7 @@ import Link from 'next/link'
 
 import { cdnify } from '../libs/utils'
 import withMe from '../libs/withMe'
+import AuthLogout from './Auth/Logout'
 
 import styles from './Layout.module.css'
 import { useTheme } from '@material-ui/core'
@@ -48,12 +49,19 @@ const Layout = function (props) {
               onClick={() => router.push('/')}
             />
           </Box>
-          <Button color="inherit" onClick={() => router.push('/login')}>
-            Login
-          </Button>
-          <Button color="inherit" onClick={() => router.push('/signup')}>
-            signup
-          </Button>
+          {!props.me && (
+            <>
+              <Button color="inherit" onClick={() => router.push('/login')}>
+                Login
+              </Button>
+              <Button color="inherit" onClick={() => router.push('/signup')}>
+                Signup
+              </Button>
+            </>
+          )}
+          <AuthLogout>
+            <Button color="inherit">Logout</Button>
+          </AuthLogout>
         </Toolbar>
       </AppBar>
       <Container maxWidth="md">{props.children}</Container>

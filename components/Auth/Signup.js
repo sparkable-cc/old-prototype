@@ -10,9 +10,9 @@ import LinearProgress from '@material-ui/core/LinearProgress'
 import withMe, { queryWithMe, MeFragment } from '../../libs/withMe'
 import MutationError from '../../components/commons/MutationError'
 
-const LOGIN = gql`
-  mutation login($username: String!, $password: String!) {
-    login(username: $username, password: $password) {
+const SIGNUP = gql`
+  mutation signup($email: String!, $username: String!, $password: String!) {
+    signup(email: $email, username: $username, password: $password) {
       ...MeFragment
     }
   }
@@ -20,7 +20,7 @@ const LOGIN = gql`
   ${MeFragment}
 `
 
-const AuthLogin = (props) => {
+const AuthSignup = (props) => {
   const {
     register,
     handleSubmit,
@@ -29,16 +29,17 @@ const AuthLogin = (props) => {
   const router = useRouter()
 
   useEffect(() => {
+    console.log({ me: props.me })
     if (props.me) {
       router.push('/')
     }
   }, [props.me])
 
-  const [login, { loading: loginLoading, error: loginError }] = useMutation(
-    LOGIN,
+  const [signup, { loading: signupLoading, error: signupError }] = useMutation(
+    SIGNUP,
     {
       errorPolicy: 'all',
-      update: (cache, { data: { login: me } }) => {
+      update: (cache, { data: { signup: me } }) => {
         cache.writeQuery({
           query: queryWithMe,
           data: { me },
@@ -47,16 +48,27 @@ const AuthLogin = (props) => {
     },
   )
 
-  if (props.me || props.meLoading) {
+  if (props.me || props.signupLoading) {
     return <LinearProgress variant="query" />
   }
 
   const onSubmit = handleSubmit((variables) => {
-    login({ variables })
+    signup({ variables })
   })
 
   return (
     <form onSubmit={onSubmit}>
+      <TextField
+        fullWidth
+        margin="normal"
+        variant="outlined"
+        label="E-Mail-Adresse"
+        {...register('email', {
+          required: 'E-Mail-Adresse zwingend erforderlich',
+        })}
+        error={!!errors.email}
+        helperText={errors.email?.message}
+      />
       <TextField
         fullWidth
         margin="normal"
@@ -73,7 +85,6 @@ const AuthLogin = (props) => {
         margin="normal"
         variant="outlined"
         label="Passwort"
-        type="password"
         {...register('password', {
           required: 'Passwort zwingend erforderlich',
         })}
@@ -85,18 +96,18 @@ const AuthLogin = (props) => {
         variant="contained"
         color="primary"
         type="submit"
-        disabled={loginLoading}
+        disabled={signupLoading}
       >
         Anmelden
       </Button>
-      {loginLoading && <LinearProgress variant="query" />}
+      {signupLoading && <LinearProgress variant="query" />}
       <MutationError
         title="Anmeldefehler"
-        content="Daten nicht gefunden. Bitte prüfen Sie Ihre Eingaben und versuchen Sie es erneut."
-        apolloError={loginError}
+        content="Das lief schief."
+        apolloError={signupError}
       />
     </form>
   )
 }
 
-export default withMe(AuthLogin)
+export default withMe(AuthSignup)

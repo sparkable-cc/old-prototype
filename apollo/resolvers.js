@@ -15,6 +15,18 @@ const resolvers = {
     },
   },
   Mutation: {
+    categoryAdd: async (parent, args, context, info) => {
+      const { title } = args
+      const { pgdb } = context
+
+      const categories = pgdb.public.categories
+
+      if (await categories.count({ title })) {
+        throw new Error('Titel der Kategorie existiert bereits')
+      }
+
+      return categories.insertAndGet({ title })
+    },
     signup: async (parent, args, context, info) => {
       const { email, username, password } = args
       const { pgdb, login } = context

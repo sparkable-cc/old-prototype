@@ -81,6 +81,8 @@ const typeDefs = gql`
     signup(email: String!, username: String!, password: String!): User!
     login(username: String!, password: String!): User!
     logout: Boolean!
+
+    categoryAdd(title: String!): Category!
   }
 `
 

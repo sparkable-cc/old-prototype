@@ -12,13 +12,8 @@ import Typography from '@material-ui/core/Typography'
 
 import { cdnify } from '../libs/utils'
 import MutationError from '../components/commons/MutationError'
-import Dialog from '../components/commons/Dialog'
-import SponsorsMain from '../components/Sponsors/Main'
-import SponsorsMarquee from '../components/Sponsors/Marquee'
-import SponsorsLogin from '../components/Sponsors/Login'
 import withMe, { queryWithMe } from '../libs/withMe'
 import Layout from '../components/Layout'
-import ParticipantList from '../components/Participant/List'
 
 import styles from './index.module.css'
 

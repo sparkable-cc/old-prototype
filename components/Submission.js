@@ -47,13 +47,16 @@ const Submission = ({ submission }) => {
   const handleExpandClick = () => {
     setExpanded(!expanded)
   }
+  console.log(submission)
 
   return (
     <Card className={classes.root}>
       <CardHeader
         avatar={
           <Avatar aria-label="recipe" className={classes.avatar}>
-            S
+            {submission.user &&
+              submission.user.username &&
+              submission.user.username[0].toUpperCase}
           </Avatar>
         }
         action={

@@ -71,3 +71,9 @@ CREATE TABLE ballots (
   comment text
 );
 
+--
+-- Version 0.0.2
+--
+INSERT INTO categories ("title")
+  VALUES (E'Technologie'), (E'Klima'), (E'Politik'), (E'Kunst'), (E'Weltraum');
+

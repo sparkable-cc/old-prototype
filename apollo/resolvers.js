@@ -8,6 +8,11 @@ const resolvers = {
     me: async (parent, args, context, info) => {
       return context.getUser()
     },
+    categories: async (parent, args, context, info) => {
+      return context.pgdb.public.categories.findAll({
+        orderBy: { title: 'DESC' },
+      })
+    },
   },
   Mutation: {
     signup: async (parent, args, context, info) => {

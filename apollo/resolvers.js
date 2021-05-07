@@ -4,8 +4,9 @@ const { isEmail, isAlphanumeric } = require('validator')
 
 const DateTime = require('./scalar/DateTime')
 
-const contentInsert = async ({ url }, { pgdb }) => {
+const contentInsert = async ({ url: _url }, { pgdb }) => {
   const contents = pgdb.public.contents
+  const url = _url.trim()
 
   const { result } = await ogs({ url }).catch((e) => {
     console.error(e)

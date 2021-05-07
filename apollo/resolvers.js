@@ -49,10 +49,16 @@ const resolvers = {
       })
     },
     submissions: async (parent, args, context, info) => {
+      const { stage, category_id } = args
       const { pgdb } = context
       const submissions = pgdb.public.submissions
 
-      return submissions.findAll()
+      const conditions = {
+        ...(stage && { stage }),
+        ...(category_id && { category_id }),
+      }
+
+      return submissions.find(conditions)
     },
   },
   Mutation: {

@@ -1,6 +1,10 @@
-import { useState, useEffect } from 'react'
 import { useForm, Controller } from 'react-hook-form'
 import { useRouter } from 'next/router'
+import {
+  CATEGORIES,
+  CATEGORYADD,
+  categoriesLoading,
+} from './commons/Categories'
 
 import { gql, useMutation, useQuery } from '@apollo/client'
 import TextField from '@material-ui/core/TextField'
@@ -43,26 +47,6 @@ const SUBMIT = gql`
 
   ${SubmissionFragment}
 `
-
-const CATEGORIES = gql`
-  query categories {
-    categories {
-      id
-      title
-    }
-  }
-`
-
-const CATEGORYADD = gql`
-  mutation categoryAdd($title: String!) {
-    categoryAdd(title: $title) {
-      id
-      title
-    }
-  }
-`
-
-const categoriesLoading = [{ title: 'Loading...', id: undefined }]
 
 const filter = createFilterOptions()
 

@@ -1,6 +1,8 @@
-import { useState, useEffect } from 'react'
+import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { useRouter } from 'next/router'
+import isEmail from 'validator/lib/isEmail'
+import isAlphanumeric from 'validator/lib/isAlphanumeric'
 
 import { gql, useMutation } from '@apollo/client'
 import TextField from '@material-ui/core/TextField'
@@ -62,9 +64,11 @@ const AuthSignup = (props) => {
         fullWidth
         margin="normal"
         variant="outlined"
-        label="E-Mail-Adresse"
+        label="An email address"
         {...register('email', {
-          required: 'E-Mail-Adresse zwingend erforderlich',
+          required: 'An email address is utmostly required.',
+          validate: (value) =>
+            isEmail(value) || 'Well, that does not look like an email address.',
         })}
         error={!!errors.email}
         helperText={errors.email?.message}
@@ -73,9 +77,16 @@ const AuthSignup = (props) => {
         fullWidth
         margin="normal"
         variant="outlined"
-        label="Nutzername"
+        label="A username"
         {...register('username', {
-          required: 'Nutzername zwingend erforderlich',
+          required: 'No name, no user!',
+          validate: {
+            noEmail: (value) =>
+              !isEmail(value) || "Your username shouldn't be an email address",
+            isAlphanumeric: (value) =>
+              isAlphanumeric(value) ||
+              'Your username is way to fancy. Remove spaces or odd chars.',
+          },
         })}
         error={!!errors.username}
         helperText={errors.username?.message}
@@ -84,9 +95,14 @@ const AuthSignup = (props) => {
         fullWidth
         margin="normal"
         variant="outlined"
-        label="Passwort"
+        label="A password"
+        type="password"
         {...register('password', {
-          required: 'Passwort zwingend erforderlich',
+          required: 'No word, no pass!',
+          minLength: {
+            value: 6,
+            message: 'You will need at least need 6 chars.',
+          },
         })}
         error={!!errors.password}
         helperText={errors.password?.message}
@@ -98,12 +114,12 @@ const AuthSignup = (props) => {
         type="submit"
         disabled={signupLoading}
       >
-        Anmelden
+        Signup
       </Button>
       {signupLoading && <LinearProgress variant="query" />}
       <MutationError
-        title="Anmeldefehler"
-        content="Das lief schief."
+        title="Sign up failed misarably"
+        content="For some reason, it failed. You may want to give it another shot."
         apolloError={signupError}
       />
     </form>

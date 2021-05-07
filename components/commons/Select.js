@@ -11,7 +11,7 @@ const ControlledSelect = ({
   children,
   ...props
 }) => {
-  const labelId = `${name}-label`;
+  const labelId = `${name}-label`
   return (
     <FormControl {...props}>
       <InputLabel id={labelId}>{label}</InputLabel>

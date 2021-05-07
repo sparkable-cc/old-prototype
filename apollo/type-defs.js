@@ -1,20 +1,86 @@
 const { gql } = require('@apollo/client')
 
 const typeDefs = gql`
-type User {
-  id: ID!
-  code: String!
-  name: String!
-}
+  scalar DateTime
 
-type Query {
-  me: User
-}
+  enum Stage {
+    egg
+    caterpillar
+    chrysalis
+    butterfy
+    admin
+  }
 
-type Mutation {
-  login(code: String!, name: String!): User!
-  logout: Boolean!
-}
+  type User {
+    id: ID!
+    email: String!
+    username: String!
+    bio: String
+    city: String
+    country: String
+    stage: Stage!
+    picture_url: String
+    date_created: DateTime!
+    date_verified: DateTime
+    tokens: Int!
+  }
+
+  type Category {
+    id: ID!
+    title: String!
+  }
+
+  enum ContentType {
+    web
+    video
+    image
+    podcast
+    document
+  }
+
+  type Content {
+    id: ID!
+    type: ContentType!
+    url: String!
+    title: String!
+    description: String
+    teaser_image_url: String
+    category: Category!
+  }
+
+  type Submission {
+    id: ID!
+    user: User!
+    content: Content!
+    date_posted: DateTime!
+    comment: String
+    stage: Stage!
+  }
+
+  enum BallotVote {
+    yes
+    no
+    spam
+  }
+
+  type Ballot {
+    id: ID!
+    user: User!
+    vote: BallotVote!
+    submission: Submission!
+    stage: Stage!
+    comment: String
+  }
+
+  type Query {
+    me: User
+  }
+
+  type Mutation {
+    signup(email: String!, username: String!, password: String!): User!
+    login(username: String!, password: String!): User!
+    logout: Boolean!
+  }
 `
 
 module.exports = { typeDefs }

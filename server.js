@@ -8,6 +8,7 @@ const passport = require('passport')
 const session = require('express-session')
 const throng = require('throng')
 const sleep = require('await-sleep')
+const bcrypt = require('bcrypt')
 
 const grapqhl = require('./apollo/server')
 
@@ -97,39 +98,22 @@ nextApp
      * Passport
      */
     passport.use(
-      new GraphQLLocalStrategy(async (codeDirty = '', name, done) => {
-        const code = codeDirty.replace(/[^A-Za-z0-9]+/g, '')
-
+      new GraphQLLocalStrategy(async (username, password, done) => {
         try {
           const user = await pgdb.public.users.findOne({
-            code
+            or: [{ username }, { email: username }],
           })
           if (!user) {
-            throw new Error('account not found')
+            throw new Error('Sowat hamwa hier nich')
+          }
+          if (!(await bcrypt.compare(password, user.hash))) {
+            throw new Error('Passwort stimmt sowas von nicht, ey')
           }
 
-          const updatedUsers = await pgdb.public.users.updateAndGetOne(
-            { id: user.id },
-            { name }
-          )
-
-          // @TODO: Log-Entry -> Login
-
-          console.log(
-            'passport:ok',
-            `code:"${code}"`,
-            `name:"${name}"`,
-            `user.id:${user.id}`,
-          )
-          done(null, updatedUsers)
+          done(null, user)
         } catch (e) {
-          console.log(
-            'passport:fail',
-            `code:"${code}"`,
-            `name:"${name}"`,
-            `codeDirty:${codeDirty}`,
-          )
-          done(new Error('Keinen Nutzer gefunden'), null)
+          console.error(e)
+          done(new Error('Anmeldung schlug grandios fehl'), null)
         }
       }),
     )

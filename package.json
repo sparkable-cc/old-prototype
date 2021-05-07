@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "engines": {
-    "node": "14.x"
+    "node": ">=14.x"
   },
   "main": "server.js",
   "scripts": {
@@ -24,6 +24,7 @@
     "apollo-server": "^2.18.2",
     "apollo-server-express": "^2.18.2",
     "await-sleep": "0.0.1",
+    "bcrypt": "^5.0.1",
     "compression": "^1.7.4",
     "connect-pg-simple": "^6.2.1",
     "create-emotion-server": "^11.0.0",
@@ -44,6 +45,5 @@
     "react-player": "^2.6.2",
     "react-responsive-carousel": "^3.2.10",
     "throng": "^5.0.0"
-  },
-  "devDependencies": {}
+  }
 }

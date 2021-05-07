@@ -5,10 +5,10 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
-  Typography
+  Typography,
 } from '@material-ui/core'
 
-const MutationError = props => {
+const MutationError = (props) => {
   const { title = 'Fehler', content } = props
   const [error, setError] = useState()
 
@@ -18,22 +18,16 @@ const MutationError = props => {
 
   return (
     <Dialog open={!!error}>
-      <DialogTitle>
-        {title}
-      </DialogTitle>
+      <DialogTitle>{title}</DialogTitle>
       <DialogContent>
-        <Typography gutterBottom>
-          {content}
-        </Typography>
+        <Typography gutterBottom>{content}</Typography>
         <details>
           <summary>Technische Informationen: {error?.message}</summary>
-          <pre>
-            {JSON.stringify(error?.graphQLErrors, null, 2)}
-          </pre>
+          <pre>{JSON.stringify(error?.graphQLErrors, null, 2)}</pre>
         </details>
       </DialogContent>
       <DialogActions>
-        <Button color='primary' onClick={handleClose}>
+        <Button color="primary" onClick={handleClose}>
           OK
         </Button>
       </DialogActions>

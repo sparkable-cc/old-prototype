@@ -3,24 +3,18 @@ import {
   Dialog,
   DialogTitle,
   DialogContent,
-  DialogActions
+  DialogActions,
 } from '@material-ui/core'
 
-const DialogContainer = props => {
+const DialogContainer = (props) => {
   const { open, title, children, onConfirm } = props
 
   return (
     <Dialog open={open}>
-      {title && (
-        <DialogTitle>
-          {title}
-        </DialogTitle>
-      )}
-      <DialogContent>
-        {children}
-      </DialogContent>
+      {title && <DialogTitle>{title}</DialogTitle>}
+      <DialogContent>{children}</DialogContent>
       <DialogActions>
-        <Button color='primary' onClick={onConfirm}>
+        <Button color="primary" onClick={onConfirm}>
           OK
         </Button>
       </DialogActions>

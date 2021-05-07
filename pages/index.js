@@ -67,14 +67,14 @@ const IndexPage = props => {
   if (props.me) {
     return (
       <Layout>
-        <p>Hello Rejoha!</p>
+        <p>Hello User!</p>
       </Layout>
     )
   }
 
   return (
     <Layout>
-      <p>Hello Rejoha!</p>
+      <p>Hello Butterfy!</p>
     </Layout>
   )
 }

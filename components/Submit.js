@@ -14,12 +14,34 @@ import Autocomplete, {
   createFilterOptions,
 } from '@material-ui/lab/Autocomplete'
 
+export const SubmissionFragment = gql`
+  fragment SubmissionFragment on Submission {
+    id
+    content {
+      type
+      url
+      title
+      description
+      teaser_image_url
+    }
+    category {
+      id
+      title
+    }
+    date_posted
+    comment
+    stage
+  }
+`
+
 const SUBMIT = gql`
-  mutation submit($email: String!, $username: String!, $password: String!) {
-    signup(email: $email, username: $username, password: $password) {
-      ...MeFragment
+  mutation submit($comment: String, $url: String!, $category_id: ID!) {
+    submit(comment: $comment, url: $url, category_id: $category_id) {
+      ...SubmissionFragment
     }
   }
+
+  ${SubmissionFragment}
 `
 
 const CATEGORIES = gql`
@@ -59,7 +81,8 @@ const Submit = (props) => {
     CATEGORYADD,
     {
       errorPolicy: 'all',
-      update(cache, { data: { categories } }) {
+
+      update(cache, { data: { categoryAdd } }) {
         cache.modify({
           fields: {
             categories(existingCategories = []) {
@@ -68,7 +91,7 @@ const Submit = (props) => {
                 fragment: gql`
                   fragment NewCategory on Category {
                     id
-                    type
+                    title
                   }
                 `,
               })
@@ -83,21 +106,22 @@ const Submit = (props) => {
     SUBMIT,
     {
       errorPolicy: 'all',
-      update: (cache, { data: { signup: me } }) => {
-        cache.writeQuery({
-          query: queryWithMe,
-          data: { me },
-        })
-      },
     },
   )
 
-  if (props.signupLoading) {
+  if (props.submitLoading) {
     return <LinearProgress variant="query" />
   }
 
   const onSubmit = handleSubmit((variables) => {
-    submit({ variables })
+    console.log(variables)
+    submit({
+      variables: {
+        comment: variables.comment,
+        url: variables.url,
+        category_id: variables.category.id,
+      },
+    })
   })
 
   return (
@@ -115,18 +139,25 @@ const Submit = (props) => {
         helperText={errors.url?.message}
       />
       <Controller
+        name="category"
+        onChange={([, data]) => {
+          console.log('Changed....', data)
+          data
+        }}
+        control={control}
         render={({ field }) => (
           <Autocomplete
             color="inherit"
             value={field.value}
             onChange={(event, newValue) => {
+              console.log(newValue)
               if (typeof newValue === 'string') {
-                field.onChange(newValue)
+                field.onChange({ title: newValue, id: undefined })
               } else if (newValue && newValue.inputValue) {
                 // Create a new value from the user input
-                field.onChange(newValue.inputValue)
+                field.onChange({ title: newValue.inputValue, id: undefined })
               } else {
-                field.onChange(newValue.inputValue)
+                field.onChange(newValue)
               }
             }}
             filterOptions={(options, params) => {
@@ -168,9 +199,6 @@ const Submit = (props) => {
             )}
           />
         )}
-        name="category"
-        onChange={([, data]) => data}
-        control={control}
       />
       <Box mt={6}>
         Please tell us, why do you think this content is relevant for all of us:

@@ -14,33 +14,32 @@ import { cdnify } from '../libs/utils'
 import MutationError from '../components/commons/MutationError'
 import withMe, { queryWithMe } from '../libs/withMe'
 import Layout from '../components/Layout'
+import StartAnonymous from '../components/StartAnonymous'
+import StartUser from '../components/StartUser'
 
 import styles from './index.module.css'
 
 const LOGOUT = gql`
-mutation logout {
-  logout
-}
+  mutation logout {
+    logout
+  }
 `
 
-const IndexPage = props => {
+const IndexPage = (props) => {
   const { register, handleSubmit, errors } = useForm()
   const apolloClient = useApolloClient()
 
-  const [logout] = useMutation(
-    LOGOUT,
-    {
-      errorPolicy: 'all',
-      update: (cache, { data: { login: me } }) => {
-        cache.writeQuery({
-          query: queryWithMe,
-          data: { me: null }
-        })
+  const [logout] = useMutation(LOGOUT, {
+    errorPolicy: 'all',
+    update: (cache, { data: { login: me } }) => {
+      cache.writeQuery({
+        query: queryWithMe,
+        data: { me: null },
+      })
 
-        apolloClient.resetStore()
-      }
-    }
-  )
+      apolloClient.resetStore()
+    },
+  })
 
   const onLogout = () => {
     logout()
@@ -48,17 +47,9 @@ const IndexPage = props => {
 
   if (props.meLoading) {
     return (
-      <Grid
-        container
-        direction='row'
-        justify='center'
-        alignItems='center'
-      >
+      <Grid container direction="row" justify="center" alignItems="center">
         <Grid item xs={12} style={{ textAlign: 'center' }}>
-          <img
-            className={styles.logo}
-            style={{ filter: 'blur(4px)' }}
-          />
+          <img className={styles.logo} style={{ filter: 'blur(4px)' }} />
         </Grid>
       </Grid>
     )
@@ -67,14 +58,14 @@ const IndexPage = props => {
   if (props.me) {
     return (
       <Layout>
-        <p>Hello User!</p>
+        <StartUser />
       </Layout>
     )
   }
 
   return (
     <Layout>
-      <p>Hello Butterfy!</p>
+      <StartAnonymous />
     </Layout>
   )
 }

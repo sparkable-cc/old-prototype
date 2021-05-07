@@ -45,13 +45,12 @@ const typeDefs = gql`
     title: String!
     description: String
     teaser_image_url: String
-    category: Category!
   }
 
   type Submission {
     id: ID!
-    user: User!
     content: Content!
+    category: Category!
     date_posted: DateTime!
     comment: String
     stage: Stage!
@@ -81,8 +80,8 @@ const typeDefs = gql`
     signup(email: String!, username: String!, password: String!): User!
     login(username: String!, password: String!): User!
     logout: Boolean!
-
     categoryAdd(title: String!): Category!
+    submit(comment: String, url: String!, category_id: ID!): Submission!
   }
 `
 

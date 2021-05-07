@@ -36,6 +36,7 @@
     "next": "^10.0.0",
     "next-cookies": "^2.0.3",
     "nodemon": "^2.0.6",
+    "open-graph-scraper": "^4.8.2",
     "passport": "^0.4.1",
     "pogi": "^2.9.2",
     "react": "^17.0.1",

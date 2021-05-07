@@ -1,6 +1,25 @@
 const bcrypt = require('bcrypt')
+const ogs = require('open-graph-scraper')
 
 const DateTime = require('./scalar/DateTime')
+
+const contentInsert = async ({ url }, { pgdb }) => {
+  const contents = pgdb.public.contents
+
+  const { result } = await ogs({ url }).catch((e) => {
+    console.error(e)
+    throw new Error('Diese URL lässt sich nicht laden')
+  })
+
+  return contents.insertAndGet({
+    url,
+    type: 'web',
+    title: result?.ogTitle || result?.twitterTitle,
+    description: result?.ogDescription || result?.twitterDescription,
+    teaser_image_url: result?.ogImage?.url || result?.twitterImage?.url,
+    og: result,
+  })
+}
 
 const resolvers = {
   DateTime,
@@ -15,6 +34,37 @@ const resolvers = {
     },
   },
   Mutation: {
+    submit: async (parent, args, context, info) => {
+      const { comment, url, category_id } = args
+      const { pgdb, login, user } = context
+
+      if (!user) {
+        throw new Error('Du musst dich erst anmelden.')
+      }
+
+      const categories = pgdb.public.categories
+      const contents = pgdb.public.contents
+      const submissions = pgdb.public.submissions
+
+      const category = await categories.findOne({ id: category_id })
+      if (!category) {
+        throw new Error('Kategorie war beim besten Wille nicht aufzufinden')
+      }
+
+      const content =
+        (await contents.findOne({ url })) ||
+        (await contentInsert({ url }, context))
+
+      const submission = await submissions.insertAndGet({
+        user_id: user.id,
+        content_id: content.id,
+        category_id: category.id,
+        comment,
+        stage: user.stage || 'egg',
+      })
+
+      return { ...submission, user, category, content }
+    },
     categoryAdd: async (parent, args, context, info) => {
       const { title } = args
       const { pgdb } = context

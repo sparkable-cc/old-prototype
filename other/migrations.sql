@@ -77,3 +77,14 @@ CREATE TABLE ballots (
 INSERT INTO categories ("title")
   VALUES (E'Technologie'), (E'Klima'), (E'Politik'), (E'Kunst'), (E'Weltraum');
 
+---
+--- Version 0.0.3
+---
+ALTER TABLE contents
+  ADD COLUMN "og" jsonb
+  DROP COLUMN "category_id";
+
+ALTER TABLE submissions
+  ADD COLUMN "category_id" uuid NOT NULL,
+  ADD FOREIGN KEY ("category_id") REFERENCES "public"."categories" ("id") ON DELETE SET NULL ON UPDATE CASCADE;
+

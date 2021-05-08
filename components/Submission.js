@@ -14,8 +14,10 @@ import { gql, useMutation } from '@apollo/client'
 
 import { SubmissionFragment } from './Submit'
 
+import MutationError from './commons/MutationError'
+
 const VOTE = gql`
-  mutation vote($submission_id: Int!) {
+  mutation vote($submission_id: ID!) {
     vote(submission_id: $submission_id) {
       ...SubmissionFragment
     }
@@ -47,13 +49,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-const Submission = ({ submission }) => {
+const Submission = ({ submission, me }) => {
   const router = useRouter()
   const classes = useStyles()
   const [hint, setHint] = useState(false)
   const [anchorEl, setAnchorEl] = useState(null)
   const [vote, { loading: voteLoading, error: voteError }] = useMutation(VOTE, {
     variables: { submission_id: submission.id },
+    errorPolicy: 'all',
   })
 
   const toggleHint = () => {
@@ -146,6 +149,11 @@ const Submission = ({ submission }) => {
           Do you think this content is meanginful for many of us?
         </CardContent>
       </Collapse>
+      <MutationError
+        title="Nope."
+        content="That did not work as planned. Sorry."
+        apolloError={voteError}
+      />
     </Card>
   )
 }

@@ -6,22 +6,21 @@ const express = require('express')
 const next = require('next')
 const passport = require('passport')
 const session = require('express-session')
-const throng = require('throng')
-const sleep = require('await-sleep')
 const bcrypt = require('bcrypt')
 
 const grapqhl = require('./apollo/server')
 
-const count = process.env.WEB_CONCURRENCY || 1
 const isDev = process.env.NODE_ENV !== 'production'
 const port = parseInt(process.env.PORT, 10) || 3000
+const sessionName = process.env.SESSION_NAME || 'dion'
 const sessionSecret = process.env.SESSION_SECRET || 'Ne partez pas sans moi'
+const sessionCookieMaxAge =
+  parseInt(process.env.SESSION_COOKIE_MAXAGE, 10) || 1000 * 60 * 60 * 24 * 7 // 7 days
 const SessionStore = connectPgSimple(session)
 
 const nextApp = next({ dev: isDev })
 const nextAppRequestHandler = nextApp.getRequestHandler()
 
-// const worker = (workerId) => nextApp.prepare()
 const workerId = 0
 nextApp
   .prepare()
@@ -80,7 +79,7 @@ nextApp
           pool: pgdb.pool,
           tableName: 'sessions',
         }),
-        name: 'dion',
+        name: sessionName,
         secret: sessionSecret,
         resave: false,
         saveUninitialized: false,
@@ -88,7 +87,7 @@ nextApp
         cookie: {
           httpOnly: true,
           secure: !isDev,
-          maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
+          maxAge: sessionCookieMaxAge,
           sameSite: true,
         },
       }),

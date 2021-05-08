@@ -39,7 +39,9 @@ export const categoriesLoading = [{ title: 'Loading...', id: undefined }]
 const Categories = ({ categoryId, setCategoryId, label, ...props }) => {
   const classes = useStyles()
   const { loading, data = {}, refetch } = useQuery(CATEGORIES)
-  const categories = data.categories || categoriesLoading
+  const categories = data.categories
+    ? [{ title: '--- All ---', id: undefined }, ...data.categories]
+    : categoriesLoading
   const labelId = `${name}-label`
   return (
     <FormControl {...props} className={classes.formControl}>

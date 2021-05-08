@@ -6,7 +6,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import Select from '@material-ui/core/Select'
 import { gql, useQuery } from '@apollo/client'
 
-const STATES = ['egg', 'caterpillar', 'chrysalis', 'butterfy']
+const STATES = ['', 'egg', 'caterpillar', 'chrysalis', 'butterfy']
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -33,7 +33,7 @@ const States = ({ stateId, setState, label, ...props }) => {
         }}
       >
         {STATES.map((state) => (
-          <MenuItem value={state}>{state}</MenuItem>
+          <MenuItem value={state}>{state || 'All'}</MenuItem>
         ))}
       </Select>
     </FormControl>

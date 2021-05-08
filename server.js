@@ -99,9 +99,7 @@ nextApp
     passport.use(
       new GraphQLLocalStrategy(async (username, password, done) => {
         try {
-          const user = await pgdb.public.users.findOne({
-            or: [{ username }, { email: username }],
-          })
+          const user = await pgdb.public.users.findOne({ username })
           if (!user) {
             throw new Error('User not found')
           }

@@ -64,9 +64,9 @@ const AuthSignup = (props) => {
         fullWidth
         margin="normal"
         variant="outlined"
-        label="An email address"
+        label="Your email address"
         {...register('email', {
-          required: 'An email address is utmostly required.',
+          required: 'An email address is utmostly required ☝️',
           validate: (value) =>
             isEmail(value) || 'Well, that does not look like an email address.',
         })}
@@ -77,15 +77,16 @@ const AuthSignup = (props) => {
         fullWidth
         margin="normal"
         variant="outlined"
-        label="A username"
+        label="Your username"
         {...register('username', {
           required: 'No name, no user!',
           validate: {
             noEmail: (value) =>
-              !isEmail(value) || "Your username shouldn't be an email address",
+              !isEmail(value) ||
+              "Your username shouldn't be an email address  ☝️",
             isAlphanumeric: (value) =>
               isAlphanumeric(value) ||
-              'Your username is way to fancy. Remove spaces or odd chars.',
+              'Your username is way to fancy. Remove spaces or odd chars  ☝️',
           },
         })}
         error={!!errors.username}
@@ -95,7 +96,7 @@ const AuthSignup = (props) => {
         fullWidth
         margin="normal"
         variant="outlined"
-        label="A password"
+        label="Your password"
         type="password"
         {...register('password', {
           required: 'No word, no pass!',

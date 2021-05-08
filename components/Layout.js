@@ -46,6 +46,11 @@ const Layout = function (props) {
               onClick={() => router.push('/')}
             />
           </Box>
+          {router.pathname != '/' && (
+            <Button color="inherit" onClick={() => router.push('/')}>
+              Start
+            </Button>
+          )}
           {props.me ? (
             <>
               <Button color="inherit" onClick={() => router.push('/submit')}>

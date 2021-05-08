@@ -49,6 +49,7 @@ const typeDefs = gql`
 
   type Submission {
     id: ID!
+    user: User!
     content: Content!
     category: Category!
     date_posted: DateTime!

@@ -147,10 +147,10 @@ const TopBar = (props) => {
           </Box>
           {tokens > 0 && (
             <Grid item align="center">
-              <span
+              <div
                 class={styles.tokens}
                 style={{ animation: tokenAnim }}
-              >{`${tokens} 🟡`}</span>
+              >{`${tokens} 🟡`}</div>
             </Grid>
           )}
 

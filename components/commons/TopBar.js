@@ -30,7 +30,8 @@ import { useRouter } from 'next/router'
 import { cdnify } from '../../libs/utils'
 import AuthLogout from '../Auth/Logout'
 import { useTheme } from '@material-ui/core'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import styles from './TopBar.module.css'
 
 import withMe from '../../libs/withMe'
 
@@ -38,8 +39,11 @@ const TopBar = (props) => {
   const router = useRouter()
   const theme = useTheme()
   const [showDrawer, setShowDrawer] = useState(false)
+  const [prevTokens, setPrevTokens] = useState()
+  const [tokenAnim, setTokenAnim] = useState('')
 
   const isUser = props.me ? true : false
+  const tokens = props.me?.tokens
 
   function toggleDrawer(event) {
     if (
@@ -51,8 +55,18 @@ const TopBar = (props) => {
     setShowDrawer(!showDrawer)
   }
 
+  useEffect(() => {
+    console.log('Tokens: ', tokens, prevTokens)
+    if (tokens && prevTokens && tokens !== prevTokens) {
+      setTokenAnim('tokensAnim 0.8s ease')
+      setPrevTokens(tokens)
+    } else {
+      setPrevTokens(tokens)
+    }
+  }, [tokens])
+
   return (
-    <AppBar position="relative" color={theme.primary}>
+    <AppBar position="sticky" color={theme.primary}>
       <Drawer
         onClick={toggleDrawer}
         onKeyDown={toggleDrawer}
@@ -131,8 +145,13 @@ const TopBar = (props) => {
               onClick={() => router.push('/')}
             />
           </Box>
-          {props.me?.tokens > 0 && (
-            <Grid item align="center">{`${props.me?.tokens} 🟡`}</Grid>
+          {tokens > 0 && (
+            <Grid item align="center">
+              <span
+                class={styles.tokens}
+                style={{ animation: tokenAnim }}
+              >{`${tokens} 🟡`}</span>
+            </Grid>
           )}
 
           <Grid item align="flex-end">

@@ -112,7 +112,6 @@ const Submit = (props) => {
   }
 
   const onSubmit = handleSubmit((variables) => {
-    console.log(variables)
     submit({
       variables: {
         comment: variables.comment,
@@ -152,7 +151,6 @@ const Submit = (props) => {
             value={field.value}
             disabled={addLoading}
             onChange={(event, newValue) => {
-              console.log(newValue)
               if (typeof newValue === 'string') {
                 field.onChange({ title: newValue, id: undefined })
               } else if (newValue && newValue.inputValue) {
@@ -187,7 +185,6 @@ const Submit = (props) => {
               }
               // Add "xxx" option created dynamically
               if (option.inputValue) {
-                console.log('New Option!', option.inputValue)
                 categoryAdd({ variables: { title: option.inputValue } })
                 // setAddValue(option.inputValue)
                 return option.inputValue

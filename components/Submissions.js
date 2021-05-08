@@ -56,8 +56,8 @@ export const SubmissionList = ({ stage, category_id }) => {
     <>
       <Grid container spacing={4}>
         {submissions.map((submission) => (
-          <Grid item xs={12} sm={6} md={4}>
-            <Submission key={submission.id} submission={submission} />
+          <Grid key={submission.id} item xs={12} sm={6} md={4}>
+            <Submission submission={submission} />
           </Grid>
         ))}
       </Grid>

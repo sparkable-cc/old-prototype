@@ -31,7 +31,6 @@ const AuthSignup = (props) => {
   const router = useRouter()
 
   useEffect(() => {
-    console.log({ me: props.me })
     if (props.me) {
       router.push('/')
     }

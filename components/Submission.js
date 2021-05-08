@@ -131,7 +131,7 @@ const Submission = ({ submission, me }) => {
         <IconButton
           aria-label="add to favorites"
           onMouseOver={toggleHint}
-          color={submission.meHasVoted ? 'primary' : 'grey'}
+          color={submission.meHasVoted ? 'primary' : 'default'}
           onClick={vote}
           onMouseOut={toggleHint}
         >

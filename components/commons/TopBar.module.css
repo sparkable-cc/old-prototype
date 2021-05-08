@@ -1,0 +1,12 @@
+@keyframes tokensAnim {
+  0% {
+    -webkit-transform: scale(1);
+  }
+  50% {
+    -webkit-transform: scale(2);
+  }
+}
+
+.tokens {
+  display: inline-block;
+}

@@ -93,6 +93,10 @@ const Submit = (props) => {
     SUBMIT,
     {
       errorPolicy: 'all',
+      onCompleted(data) {
+        alert('Thank you so much for sharing!')
+        router.push('/')
+      },
     },
   )
 

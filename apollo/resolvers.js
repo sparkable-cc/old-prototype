@@ -145,6 +145,7 @@ const resolvers = {
 
       const submissions = pgdb.public.submissions
       const ballots = pgdb.public.ballots
+      const users = pgdb.public.users
 
       const submission = await submissions.findOne({ id: submission_id })
       if (!submission) {
@@ -169,6 +170,8 @@ const resolvers = {
         submission_id,
         stage: user.stage || 'egg',
       })
+
+      await users.updateOne({ id: user.id }, { tokens: user.tokens + 1 })
 
       const votes = await ballots.count({
         submission_id,
@@ -197,6 +200,7 @@ const resolvers = {
       const categories = pgdb.public.categories
       const contents = pgdb.public.contents
       const submissions = pgdb.public.submissions
+      const users = pgdb.public.users
 
       const category = await categories.findOne({ id: category_id })
       if (!category) {
@@ -217,7 +221,8 @@ const resolvers = {
         stage: user.stage || 'egg',
       })
 
-      // @TODO: Increase user tokens
+      await users.updateOne({ id: user.id }, { tokens: user.tokens + 3 })
+
       return submission
     },
     categoryAdd: async (parent, args, context, info) => {
@@ -273,6 +278,7 @@ const resolvers = {
         email,
         username,
         hash,
+        tokens: 1,
       })
 
       await login(newUser)

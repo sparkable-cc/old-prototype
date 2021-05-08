@@ -34,6 +34,7 @@ import { useEffect, useState } from 'react'
 import styles from './TopBar.module.css'
 
 import withMe from '../../libs/withMe'
+import { Hidden } from '@material-ui/core'
 
 const TopBar = (props) => {
   const router = useRouter()
@@ -154,32 +155,48 @@ const TopBar = (props) => {
             </Grid>
           )}
 
-          <Grid item align="flex-end">
-            {router.pathname != '/' && (
-              <Button color="inherit" onClick={() => router.push('/')}>
-                Start
-              </Button>
-            )}
-            {props.me ? (
-              <>
-                <Button color="inherit" onClick={() => router.push('/submit')}>
-                  <Add /> Submit a Link
+          <Hidden only="xs">
+            <Grid item align="flex-end">
+              {router.pathname != '/' && (
+                <Button color="inherit" onClick={() => router.push('/')}>
+                  Start
                 </Button>
-                <AuthLogout>
-                  <Button color="inherit">Logout</Button>
-                </AuthLogout>
-              </>
-            ) : (
-              <>
-                <Button color="inherit" onClick={() => router.push('/login')}>
-                  Login
-                </Button>
-                <Button color="inherit" onClick={() => router.push('/signup')}>
-                  Signup
-                </Button>
-              </>
-            )}
-          </Grid>
+              )}
+              {props.me ? (
+                <>
+                  <Button
+                    color="inherit"
+                    onClick={() => router.push('/submit')}
+                  >
+                    <Add /> Submit a Link
+                  </Button>
+                  <AuthLogout>
+                    <Button color="inherit">Logout</Button>
+                  </AuthLogout>
+                </>
+              ) : (
+                <>
+                  <Button color="inherit" onClick={() => router.push('/login')}>
+                    Login
+                  </Button>
+                  <Button
+                    color="inherit"
+                    onClick={() => router.push('/signup')}
+                  >
+                    Signup
+                  </Button>
+                </>
+              )}
+              <IconButton
+                edge="start"
+                color="inherit"
+                aria-label="menu"
+                onClick={toggleDrawer}
+              >
+                <Menu />
+              </IconButton>
+            </Grid>
+          </Hidden>
         </Box>
       </Toolbar>
     </AppBar>

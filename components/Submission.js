@@ -17,6 +17,7 @@ import ShareIcon from '@material-ui/icons/Share'
 import MoreVertIcon from '@material-ui/icons/MoreVert'
 import Link from '@material-ui/core/Link'
 import { formatDate } from '../libs/date'
+import { useRouter } from 'next/router'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -42,6 +43,7 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 const Submission = ({ submission }) => {
+  const router = useRouter()
   const classes = useStyles()
   const [expanded, setExpanded] = useState(false)
 
@@ -65,7 +67,11 @@ const Submission = ({ submission }) => {
             <MoreVertIcon />
           </IconButton>
         }
-        title={submission.content.title}
+        title={
+          <Link href={submission.content.url} color="inherit">
+            {submission.content.title}
+          </Link>
+        }
         subheader={formatDate(submission.date_posted)}
       />
       <Link href={submission.content.url}>
@@ -87,7 +93,11 @@ const Submission = ({ submission }) => {
           <FavoriteIcon />
         </IconButton>
         <IconButton aria-label="share">
-          <ShareIcon />
+          <Link
+            href={`http://twitter.com/share?text=@ButterfyMe+reads+«${submission.content.title}»&url=${submission.content.url}`}
+          >
+            <ShareIcon />
+          </Link>
         </IconButton>
         {/* <IconButton
           className={clsx(classes.expand, {

@@ -59,18 +59,6 @@ const resolvers = {
 
       return contents.findOne({ id: content_id })
     },
-    stage: async (parent, args, context, info) => {
-      const { id } = parent
-      const { pgdb } = context
-      const ballots = pgdb.public.ballots
-
-      const votes = await ballots.count({
-        submission_id: id,
-        vote: 'yes',
-      })
-
-      return getStage(votes)
-    },
     votes: async (parent, args, context, info) => {
       const { id } = parent
       const { pgdb } = context
@@ -169,7 +157,7 @@ const resolvers = {
       })
 
       const votes = await ballots.count({
-        submission_id: id,
+        submission_id,
         vote: 'yes',
       })
 

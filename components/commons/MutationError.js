@@ -20,9 +20,10 @@ const MutationError = (props) => {
     <Dialog open={!!error}>
       <DialogTitle>{title}</DialogTitle>
       <DialogContent>
+        <Typography gutterBottom>{error?.message}</Typography>
         <Typography gutterBottom>{content}</Typography>
         <details>
-          <summary>Technical Mubmle Jumble: {error?.message}</summary>
+          <summary>Technical Mubmle Jumble</summary>
           <pre>{JSON.stringify(error?.graphQLErrors, null, 2)}</pre>
         </details>
       </DialogContent>

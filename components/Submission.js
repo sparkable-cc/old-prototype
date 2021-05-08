@@ -131,16 +131,9 @@ const Submission = ({ submission, me }) => {
             <Share />
           </Link>
         </IconButton>
-        {/* <IconButton
-          className={clsx(classes.expand, {
-            [classes.expandOpen]: expanded,
-          })}
-          onClick={handleExpandClick}
-          aria-expanded={expanded}
-          aria-label="show more"
-        >
-          <ExpandMoreIcon />
-        </IconButton> */}
+        <p>
+          <small>Votes: {submission.votes}</small>
+        </p>
       </CardActions>
       <Collapse in={hint} timeout="auto" unmountOnExit>
         <CardContent

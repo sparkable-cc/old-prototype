@@ -1,0 +1,21 @@
+@keyframes rotatee {
+  0% {
+    -webkit-transform: rotateY(0deg);
+  }
+  25% {
+    -webkit-transform: rotateY(0deg);
+  }
+  25% {
+    /*2.4 / 2.9 = 0.827*/
+    -webkit-transform: rotateY(360deg);
+  }
+  100% {
+    -webkit-transform: rotateY(360deg);
+  }
+}
+
+.roto {
+  animation: rotatee 4s linear infinite;
+  display: inline-block;
+  font-weight: bold;
+}

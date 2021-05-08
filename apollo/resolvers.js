@@ -45,6 +45,17 @@ const getStage = (votes) => {
 const resolvers = {
   DateTime,
   Submission: {
+    user: async (parent, args, context, info) => {
+      const { user_id } = parent
+      const { pgdb, user } = context
+
+      if (user.id === user_id) {
+        return user
+      }
+
+      const { id, username } = user
+      return { id, username }
+    },
     category: async (parent, args, context, info) => {
       const { category_id } = parent
       const { pgdb } = context

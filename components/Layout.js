@@ -12,6 +12,7 @@ const Layout = function (props) {
       <Container maxWidth="md">
         <Box py={3}>{props.children}</Box>
       </Container>
+      <Box my={10} />
     </>
   )
 }

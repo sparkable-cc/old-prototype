@@ -110,7 +110,6 @@ const TopBar = (props) => {
             />
             <Divider />
             <NavItem icon={<Public />} label="About" href="/about" />
-            <NavItem icon={<SpeakerNotes />} label="News" href="/news" />
             <NavItem icon={<Help />} label="Why Butterfy?" href="/why" />
             <NavItem icon={<GroupWork />} label="Team" href="/team" />
             <Divider />

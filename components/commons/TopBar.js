@@ -24,6 +24,7 @@ import {
   GroupWork,
   Help,
   Public,
+  GitHub,
 } from '@material-ui/icons'
 import { useRouter } from 'next/router'
 
@@ -191,9 +192,11 @@ const TopBar = (props) => {
                 edge="start"
                 color="inherit"
                 aria-label="menu"
-                onClick={toggleDrawer}
+                onClick={() =>
+                  router.push('https://github.com/butterfyme/prototype')
+                }
               >
-                <Menu />
+                <GitHub />
               </IconButton>
             </Grid>
           </Hidden>

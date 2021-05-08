@@ -3,7 +3,7 @@ import Layout from '../components/Layout'
 const Custom404 = () => {
   return (
     <Layout>
-      <p>Seite nicht gefunden</p>
+      <p>This page is not.</p>
     </Layout>
   )
 }

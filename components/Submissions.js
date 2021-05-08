@@ -32,7 +32,7 @@ const Submissions = (props) => {
             />
           </Grid>
           <Grid item xs={6}>
-            <Stages stage={stage} setStage={setStage} label="Stage" />
+            <Stages stage={stage} setStage={setStage} label="User Stage" />
           </Grid>
         </Grid>
       </Box>

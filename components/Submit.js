@@ -56,7 +56,10 @@ const Submit = (props) => {
     handleSubmit,
     control,
     formState: { errors },
-  } = useForm()
+  } = useForm({
+    mode: 'onBlur',
+    reValidateMode: 'onBlur',
+  })
   const router = useRouter()
   const { loading, data = {}, refetch } = useQuery(CATEGORIES)
   const categories = data.categories || categoriesLoading
@@ -117,22 +120,26 @@ const Submit = (props) => {
         placeholder="http://"
         label="URL"
         {...register('url', {
-          required: 'We do need a web address (URL) to continue.',
+          required: 'We do need a valid web address to continue.',
+          pattern: /^https?\:\/\//i,
         })}
         error={!!errors.url}
-        helperText={errors.url?.message}
+        helperText={
+          errors.url ? 'We do need a valid web address to continue.' : ''
+        }
       />
       <Controller
         name="category"
-        onChange={([, data]) => {
-          console.log('Changed....', data)
-          data
-        }}
         control={control}
+        rules={{
+          required:
+            'What category does this content belong to? You can add a new one',
+        }}
         render={({ field }) => (
           <Autocomplete
             color="inherit"
             value={field.value}
+            disabled={addLoading}
             onChange={(event, newValue) => {
               console.log(newValue)
               if (typeof newValue === 'string') {
@@ -171,6 +178,7 @@ const Submit = (props) => {
               if (option.inputValue) {
                 console.log('New Option!', option.inputValue)
                 categoryAdd({ variables: { title: option.inputValue } })
+                // setAddValue(option.inputValue)
                 return option.inputValue
               }
               // Regular option
@@ -184,6 +192,10 @@ const Submit = (props) => {
           />
         )}
       />
+
+      {errors.category && (
+        <p>What category does this content belong to? You can add a new one</p>
+      )}
       <Box mt={6}>
         Please tell us, why do you think this content is relevant for all of us:
       </Box>

@@ -33,7 +33,9 @@ const Stages = ({ stageId, setStage, label, ...props }) => {
         }}
       >
         {STAGES.map((stage) => (
-          <MenuItem value={stage || undefined}>{stage || 'All'}</MenuItem>
+          <MenuItem key={stage} value={stage || undefined}>
+            {stage || 'All'}
+          </MenuItem>
         ))}
       </Select>
     </FormControl>

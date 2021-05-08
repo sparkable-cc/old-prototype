@@ -32,9 +32,15 @@ export const SubmissionFragment = gql`
       id
       title
     }
+    user {
+      id
+      username
+    }
     date_posted
     comment
     stage
+    votes
+    meHasVoted
   }
 `
 

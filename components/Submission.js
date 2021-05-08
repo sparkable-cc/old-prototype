@@ -76,7 +76,7 @@ const Submission = ({ submission, me }) => {
           <Avatar aria-label="recipe" className={classes.avatar}>
             {submission.user &&
               submission.user.username &&
-              submission.user.username[0].toUpperCase}
+              submission.user.username[0].toUpperCase()}
           </Avatar>
         }
         action={
@@ -119,6 +119,7 @@ const Submission = ({ submission, me }) => {
         <IconButton
           aria-label="add to favorites"
           onMouseOver={toggleHint}
+          color={submission.meHasVoted ? 'primary' : 'grey'}
           onClick={vote}
           onMouseOut={toggleHint}
         >
@@ -131,9 +132,6 @@ const Submission = ({ submission, me }) => {
             <Share />
           </Link>
         </IconButton>
-        <p>
-          <small>Votes: {submission.votes}</small>
-        </p>
       </CardActions>
       <Collapse in={hint} timeout="auto" unmountOnExit>
         <CardContent

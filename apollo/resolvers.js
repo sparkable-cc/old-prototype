@@ -25,6 +25,23 @@ const contentInsert = async ({ url: _url }, { pgdb }) => {
   })
 }
 
+const submissionStages = [
+  { predicate: ({ votes }) => votes <= 0, name: 'egg' },
+  { predicate: ({ votes }) => votes === 1, name: 'caterpillar' },
+  { predicate: ({ votes }) => votes === 2, name: 'chrysalis' },
+  { predicate: ({ votes }) => votes >= 3, name: 'butterfy' },
+]
+
+const getStage = (votes) => {
+  const stage = submissionStages.find((s) => !!s.predicate({ votes }))
+
+  if (!stage) {
+    throw new Error('Amount of votes does not fit into either stage')
+  }
+
+  return stage.name
+}
+
 const resolvers = {
   DateTime,
   Submission: {
@@ -41,6 +58,39 @@ const resolvers = {
       const contents = pgdb.public.contents
 
       return contents.findOne({ id: content_id })
+    },
+    stage: async (parent, args, context, info) => {
+      const { id } = parent
+      const { pgdb } = context
+      const ballots = pgdb.public.ballots
+
+      const votes = await ballots.count({
+        submission_id: id,
+        vote: 'yes',
+      })
+
+      return getStage(votes)
+    },
+    votes: async (parent, args, context, info) => {
+      const { id } = parent
+      const { pgdb } = context
+      const ballots = pgdb.public.ballots
+
+      return await ballots.count({
+        submission_id: id,
+        vote: 'yes',
+      })
+    },
+    meHasVoted: async (parent, args, context, info) => {
+      const { id } = parent
+      const { pgdb, user } = context
+      const ballots = pgdb.public.ballots
+
+      return !!(await ballots.count({
+        user_id: user.id,
+        submission_id: id,
+        vote: 'yes',
+      }))
     },
   },
   Query: {
@@ -81,6 +131,57 @@ const resolvers = {
     },
   },
   Mutation: {
+    vote: async (parent, args, context, info) => {
+      const { submission_id } = args
+      const { pgdb, user } = context
+
+      if (!user) {
+        throw new Error(
+          'You will have to login or sign up first. No anon data.',
+        )
+      }
+
+      const submissions = pgdb.public.submissions
+      const ballots = pgdb.public.ballots
+
+      const submission = await submissions.findOne({ id: submission_id })
+      if (!submission) {
+        throw new Error('There is no such submission.')
+      }
+
+      if (submission.user_id === user.id) {
+        throw new Error("Nice try. You can't vote for your own submissions.")
+      }
+
+      const existingBallot = await ballots.findOne({
+        user_id: user.id,
+        submission_id,
+      })
+      if (existingBallot) {
+        throw new Error('Computer says "no". You voted on this one already.')
+      }
+
+      await ballots.insert({
+        user_id: user.id,
+        vote: 'yes',
+        submission_id,
+        stage: user.stage || 'egg',
+      })
+
+      const votes = await ballots.count({
+        submission_id: id,
+        vote: 'yes',
+      })
+
+      const stage = getStage(votes)
+
+      const updatedSubmission = await submissions.updateAndGetOne(
+        { id: submission_id },
+        { stage },
+      )
+
+      return updatedSubmission
+    },
     submit: async (parent, args, context, info) => {
       const { comment, url, category_id } = args
       const { pgdb, user } = context
@@ -114,7 +215,8 @@ const resolvers = {
         stage: user.stage || 'egg',
       })
 
-      return { ...submission, user, category, content }
+      // @TODO: Increase user tokens
+      return submission
     },
     categoryAdd: async (parent, args, context, info) => {
       const { title } = args

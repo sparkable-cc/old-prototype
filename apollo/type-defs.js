@@ -54,21 +54,8 @@ const typeDefs = gql`
     date_posted: DateTime!
     comment: String
     stage: Stage!
-  }
-
-  enum BallotVote {
-    yes
-    no
-    spam
-  }
-
-  type Ballot {
-    id: ID!
-    user: User!
-    vote: BallotVote!
-    submission: Submission!
-    stage: Stage!
-    comment: String
+    votes: Int!
+    meHasVoted: Boolean!
   }
 
   type Query {
@@ -78,6 +65,7 @@ const typeDefs = gql`
   }
 
   type Mutation {
+    vote(submission_id: ID!): Submission!
     signup(email: String!, username: String!, password: String!): User!
     login(username: String!, password: String!): User!
     logout: Boolean!

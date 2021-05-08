@@ -17,6 +17,8 @@ import { SubmissionFragment } from './Submit'
 
 import MutationError from './commons/MutationError'
 
+import { queryWithMe } from '../libs/withMe'
+
 const VOTE = gql`
   mutation vote($submission_id: ID!) {
     vote(submission_id: $submission_id) {
@@ -58,6 +60,7 @@ const Submission = ({ submission, me }) => {
   const [vote, { loading: voteLoading, error: voteError }] = useMutation(VOTE, {
     variables: { submission_id: submission.id },
     errorPolicy: 'all',
+    refetchQueries: [{ query: queryWithMe }],
   })
 
   const toggleHint = () => {

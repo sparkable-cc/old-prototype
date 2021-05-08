@@ -99,6 +99,7 @@ const Submit = (props) => {
     SUBMIT,
     {
       errorPolicy: 'all',
+      refetchQueries: [{ query: queryWithMe }],
       onCompleted(data) {
         alert('Thank you so much for sharing!')
         router.push('/')

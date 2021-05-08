@@ -88,3 +88,13 @@ ALTER TABLE submissions
   ADD COLUMN "category_id" uuid NOT NULL,
   ADD FOREIGN KEY ("category_id") REFERENCES "public"."categories" ("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
+--
+-- Version 0.0.4
+--
+ALTER TABLE "public"."users"
+  ADD UNIQUE ("email"),
+  ADD UNIQUE ("username");
+
+ALTER TABLE "public"."contents"
+  ADD COLUMN "date_created" timestamp with time zone NOT NULL DEFAULT now();
+

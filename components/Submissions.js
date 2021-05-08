@@ -22,16 +22,16 @@ const Submissions = (props) => {
   const [category_id, setCategoryId] = useState('')
   return (
     <>
-      <Box mb={5}>
-        <Grid container spacing={4}>
-          <Grid item xs={6}>
+      <Box mb={1}>
+        <Grid container spacing={4} justify="space-between">
+          <Grid item>
             <Categories
               categoryId={category_id}
               setCategoryId={setCategoryId}
               label="Category"
             />
           </Grid>
-          <Grid item xs={6}>
+          <Grid item>
             <Stages stage={stage} setStage={setStage} label="User Stage" />
           </Grid>
         </Grid>

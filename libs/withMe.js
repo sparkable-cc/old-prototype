@@ -5,6 +5,7 @@ export const MeFragment = gql`
   fragment MeFragment on User {
     id
     username
+    tokens
   }
 `
 

@@ -2,6 +2,7 @@ import {
   IconButton,
   Toolbar,
   Box,
+  Grid,
   Button,
   Typography,
   Link,
@@ -110,7 +111,7 @@ const TopBar = (props) => {
           >
             <Menu />
           </IconButton>
-          <Box mr={4}>
+          <Box mr={2}>
             <Typography variant="h6" color="inherit" noWrap>
               <Link color="inherit" onClick={() => router.push('/')}>
                 Butterfy
@@ -124,30 +125,33 @@ const TopBar = (props) => {
             onClick={() => router.push('/')}
           />
         </Box>
-        {router.pathname != '/' && (
-          <Button color="inherit" onClick={() => router.push('/')}>
-            Start
-          </Button>
-        )}
-        {props.me ? (
-          <>
-            <Button color="inherit" onClick={() => router.push('/submit')}>
-              <Add /> Submit a Link
+        <span>
+          {`${props.me.tokens} 🟡`}
+          {router.pathname != '/' && (
+            <Button color="inherit" onClick={() => router.push('/')}>
+              Start
             </Button>
-            <AuthLogout>
-              <Button color="inherit">Logout</Button>
-            </AuthLogout>
-          </>
-        ) : (
-          <>
-            <Button color="inherit" onClick={() => router.push('/login')}>
-              Login
-            </Button>
-            <Button color="inherit" onClick={() => router.push('/signup')}>
-              Signup
-            </Button>
-          </>
-        )}
+          )}
+          {props.me ? (
+            <>
+              <Button color="inherit" onClick={() => router.push('/submit')}>
+                <Add /> Submit a Link
+              </Button>
+              <AuthLogout>
+                <Button color="inherit">Logout</Button>
+              </AuthLogout>
+            </>
+          ) : (
+            <>
+              <Button color="inherit" onClick={() => router.push('/login')}>
+                Login
+              </Button>
+              <Button color="inherit" onClick={() => router.push('/signup')}>
+                Signup
+              </Button>
+            </>
+          )}
+        </span>
       </Toolbar>
     </AppBar>
   )

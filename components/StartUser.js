@@ -15,7 +15,7 @@ const StartUser = (props) => {
 
   const nextRotate = () => {
     setTimeout(() => {
-      setMix(mix < mix.length - 1 ? mix + 1 : 0)
+      setMix(mix < meaningful.length - 1 ? mix + 1 : 0)
     }, 2000)
   }
 

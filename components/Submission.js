@@ -11,6 +11,7 @@ import { Favorite, Share, MoreVert } from '@material-ui/icons'
 import { formatDate } from '../libs/date'
 import { useRouter } from 'next/router'
 import { gql, useMutation } from '@apollo/client'
+import { truncate } from '../libs/utils'
 
 import { SubmissionFragment } from './Submit'
 
@@ -112,9 +113,17 @@ const Submission = ({ submission, me }) => {
       </Link>
       <CardContent>
         <Typography variant="body2" color="textSecondary" component="p">
-          {submission.content.description}
+          {truncate(submission.content.description, 300)}
         </Typography>
       </CardContent>
+      {submission.comment && (
+        <CardContent style={{ background: '#f8f8f8' }}>
+          <Typography variant="body2" color="textSecondary" component="p">
+            @{submission.user.username}:{' '}
+            <i>«{truncate(submission.comment, 300)}»</i>
+          </Typography>
+        </CardContent>
+      )}
       <CardActions disableSpacing>
         <IconButton
           aria-label="add to favorites"

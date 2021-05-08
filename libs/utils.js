@@ -1,6 +1,8 @@
 import getConfig from 'next/config'
 
-const { publicRuntimeConfig: { cdnPrefix, hash } } = getConfig()
+const {
+  publicRuntimeConfig: { cdnPrefix, hash },
+} = getConfig()
 
 export const cdnify = (path) => {
   if (!path.startsWith('/')) {
@@ -12,4 +14,8 @@ export const cdnify = (path) => {
   }
 
   return `${cdnPrefix}${path}?hash=${hash}`
+}
+
+export const truncate = (text, len = 300) => {
+  return !text || text.length < len ? text : text.substring(0, len) + '...'
 }

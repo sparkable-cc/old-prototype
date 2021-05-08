@@ -1,7 +1,7 @@
 import { gql, useQuery } from '@apollo/client'
 import { LinearProgress, Box, Grid } from '@material-ui/core'
 import Categories from './commons/Categories'
-import States from './commons/States'
+import Stages from './commons/Stages'
 
 import { SubmissionFragment } from './Submit'
 import Submission from './Submission'
@@ -18,7 +18,7 @@ export const SUBMISSIONS = gql`
 `
 
 const Submissions = (props) => {
-  const [state, setState] = useState('')
+  const [stage, setStage] = useState()
   const [category_id, setCategoryId] = useState('')
   return (
     <>
@@ -32,18 +32,18 @@ const Submissions = (props) => {
             />
           </Grid>
           <Grid item xs={6}>
-            <States state={state} setState={setState} label="State" />
+            <Stages stage={stage} setStage={setStage} label="Stage" />
           </Grid>
         </Grid>
       </Box>
-      <SubmissionList state={state} category_id={category_id} />
+      <SubmissionList stage={stage} category_id={category_id} />
     </>
   )
 }
 
-export const SubmissionList = ({ state, category_id }) => {
+export const SubmissionList = ({ stage, category_id }) => {
   const { loading, data = {}, refetch } = useQuery(SUBMISSIONS, {
-    variables: { state, category_id },
+    variables: { stage, category_id },
     fetchPolicy: 'network-only',
   })
   const { submissions } = data

@@ -6,7 +6,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import Select from '@material-ui/core/Select'
 import { gql, useQuery } from '@apollo/client'
 
-const STATES = ['', 'egg', 'caterpillar', 'chrysalis', 'butterfy']
+const STAGES = ['', 'egg', 'caterpillar', 'chrysalis', 'butterfy']
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-const States = ({ stateId, setState, label, ...props }) => {
+const Stages = ({ stageId, setStage, label, ...props }) => {
   const classes = useStyles()
   const labelId = `${name}-label`
   return (
@@ -27,17 +27,17 @@ const States = ({ stateId, setState, label, ...props }) => {
       <Select
         labelId={labelId}
         label={label}
-        value={stateId}
+        value={stageId}
         onChange={(evt) => {
-          setState(evt.target.value)
+          setStage(evt.target.value)
         }}
       >
-        {STATES.map((state) => (
-          <MenuItem value={state}>{state || 'All'}</MenuItem>
+        {STAGES.map((stage) => (
+          <MenuItem value={stage || undefined}>{stage || 'All'}</MenuItem>
         ))}
       </Select>
     </FormControl>
   )
 }
 
-export default States
+export default Stages

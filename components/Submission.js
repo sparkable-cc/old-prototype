@@ -71,7 +71,9 @@ const Submission = ({ submission }) => {
       <Link href={submission.content.url}>
         <CardMedia
           className={classes.media}
-          image={submission.content.teaser_image_url}
+          image={
+            submission.content.teaser_image_url || '/images/placeholder.png'
+          }
           title="Teaser Image"
         />
       </Link>

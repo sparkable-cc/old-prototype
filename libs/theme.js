@@ -19,7 +19,7 @@ const theme = createMuiTheme({
     primary: blue,
     secondary: cyan,
   },
-  spacing: (value) => value ** 2,
+  //spacing: (value) => value ** 2,
 })
 
 export default responsiveFontSizes(theme)

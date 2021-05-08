@@ -67,7 +67,9 @@ const Layout = function (props) {
           )}
         </Toolbar>
       </AppBar>
-      <Container maxWidth="md">{props.children}</Container>
+      <Container maxWidth="md">
+        <Box py={3}>{props.children}</Box>
+      </Container>
     </>
   )
 }

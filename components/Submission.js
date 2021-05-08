@@ -45,12 +45,11 @@ const useStyles = makeStyles((theme) => ({
 const Submission = ({ submission }) => {
   const router = useRouter()
   const classes = useStyles()
-  const [expanded, setExpanded] = useState(false)
+  const [hint, setHint] = useState(false)
 
-  const handleExpandClick = () => {
-    setExpanded(!expanded)
+  const toggleHint = () => {
+    setHint(!hint)
   }
-  console.log(submission)
 
   return (
     <Card className={classes.root}>
@@ -89,7 +88,11 @@ const Submission = ({ submission }) => {
         </Typography>
       </CardContent>
       <CardActions disableSpacing>
-        <IconButton aria-label="add to favorites">
+        <IconButton
+          aria-label="add to favorites"
+          onMouseOver={toggleHint}
+          onMouseOut={toggleHint}
+        >
           <FavoriteIcon />
         </IconButton>
         <IconButton aria-label="share">
@@ -110,8 +113,12 @@ const Submission = ({ submission }) => {
           <ExpandMoreIcon />
         </IconButton> */}
       </CardActions>
-      <Collapse in={expanded} timeout="auto" unmountOnExit>
-        <CardContent></CardContent>
+      <Collapse in={hint} timeout="auto" unmountOnExit>
+        <CardContent
+          style={{ background: '#2196f3', color: 'white', fontWeight: 'bold' }}
+        >
+          Do you think this content is meanginful for many of us?
+        </CardContent>
       </Collapse>
     </Card>
   )

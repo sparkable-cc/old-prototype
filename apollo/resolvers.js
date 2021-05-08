@@ -157,7 +157,7 @@ const resolvers = {
       })
 
       const votes = await ballots.count({
-        submission_id: id,
+        submission_id,
         vote: 'yes',
       })
 

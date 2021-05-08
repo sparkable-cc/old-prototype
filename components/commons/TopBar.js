@@ -102,56 +102,66 @@ const TopBar = (props) => {
         </div>
       </Drawer>
       <Toolbar>
-        <Box display="flex" flexGrow={1} alignItems="center">
-          <IconButton
-            edge="start"
-            color="inherit"
-            aria-label="menu"
-            onClick={toggleDrawer}
-          >
-            <Menu />
-          </IconButton>
-          <Box mr={2}>
-            <Typography variant="h6" color="inherit" noWrap>
-              <Link color="inherit" onClick={() => router.push('/')}>
-                Butterfy
-              </Link>
-            </Typography>
+        <Box
+          display="flex"
+          justifyContent="space-between"
+          alignItems="center"
+          style={{ flex: 1 }}
+        >
+          <Box display="flex" alignItems="center">
+            <IconButton
+              edge="start"
+              color="inherit"
+              aria-label="menu"
+              onClick={toggleDrawer}
+            >
+              <Menu />
+            </IconButton>
+            <Box mr={2}>
+              <Typography variant="h6" color="inherit" noWrap>
+                <Link color="inherit" onClick={() => router.push('/')}>
+                  Butterfy
+                </Link>
+              </Typography>
+            </Box>
+            <img
+              src="/images/butterfy.png"
+              width="45"
+              height="40"
+              onClick={() => router.push('/')}
+            />
           </Box>
-          <img
-            src="/images/butterfy.png"
-            width="45"
-            height="40"
-            onClick={() => router.push('/')}
-          />
+          {props.me.tokens > 0 && (
+            <Grid item align="center">{`${props.me.tokens} 🟡`}</Grid>
+          )}
+
+          <Grid item align="flex-end">
+            {router.pathname != '/' && (
+              <Button color="inherit" onClick={() => router.push('/')}>
+                Start
+              </Button>
+            )}
+            {props.me ? (
+              <>
+                <Button color="inherit" onClick={() => router.push('/submit')}>
+                  <Add /> Submit a Link
+                </Button>
+                <AuthLogout>
+                  <Button color="inherit">Logout</Button>
+                </AuthLogout>
+              </>
+            ) : (
+              <>
+                <Button color="inherit" onClick={() => router.push('/login')}>
+                  Login
+                </Button>
+                <Button color="inherit" onClick={() => router.push('/signup')}>
+                  Signup
+                </Button>
+              </>
+            )}
+          </Grid>
         </Box>
-        <span>
-          {`${props.me.tokens} 🟡`}
-          {router.pathname != '/' && (
-            <Button color="inherit" onClick={() => router.push('/')}>
-              Start
-            </Button>
-          )}
-          {props.me ? (
-            <>
-              <Button color="inherit" onClick={() => router.push('/submit')}>
-                <Add /> Submit a Link
-              </Button>
-              <AuthLogout>
-                <Button color="inherit">Logout</Button>
-              </AuthLogout>
-            </>
-          ) : (
-            <>
-              <Button color="inherit" onClick={() => router.push('/login')}>
-                Login
-              </Button>
-              <Button color="inherit" onClick={() => router.push('/signup')}>
-                Signup
-              </Button>
-            </>
-          )}
-        </span>
       </Toolbar>
     </AppBar>
   )

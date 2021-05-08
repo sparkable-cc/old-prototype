@@ -62,6 +62,7 @@ const Submission = ({ submission, me }) => {
     errorPolicy: 'all',
     refetchQueries: [{ query: queryWithMe }],
   })
+  const domain = new URL(submission.content.url).hostname.replace('www.', '')
 
   const toggleHint = () => {
     setHint(!hint)
@@ -93,7 +94,7 @@ const Submission = ({ submission, me }) => {
             {submission.content.title}
           </Link>
         }
-        subheader={formatDate(submission.date_posted)}
+        subheader={`${formatDate(submission.date_posted)}, ©${domain}`}
       />
       <Menu
         id="submission-menu"

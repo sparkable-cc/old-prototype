@@ -48,12 +48,15 @@ const resolvers = {
     user: async (parent, args, context, info) => {
       const { user_id } = parent
       const { pgdb, user } = context
+      const users = pgdb.public.users
 
       if (user.id === user_id) {
         return user
       }
 
-      const { id, username } = user
+      const submitter = await users.findOne({ id: user_id })
+
+      const { id, username } = submitter
       return { id, username }
     },
     category: async (parent, args, context, info) => {

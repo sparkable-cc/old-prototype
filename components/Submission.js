@@ -146,7 +146,7 @@ const Submission = ({ submission, me }) => {
         <CardContent
           style={{ background: '#2196f3', color: 'white', fontWeight: 'bold' }}
         >
-          Do you think this content is meanginful for many of us?
+          Do you think this content is meaningful for many of us?
         </CardContent>
       </Collapse>
       <MutationError

@@ -131,8 +131,8 @@ const TopBar = (props) => {
               onClick={() => router.push('/')}
             />
           </Box>
-          {props.me.tokens > 0 && (
-            <Grid item align="center">{`${props.me.tokens} 🟡`}</Grid>
+          {props.me?.tokens > 0 && (
+            <Grid item align="center">{`${props.me?.tokens} 🟡`}</Grid>
           )}
 
           <Grid item align="flex-end">

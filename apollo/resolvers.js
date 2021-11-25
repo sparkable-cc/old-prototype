@@ -131,6 +131,23 @@ const resolvers = {
 
       return submissions.find(conditions)
     },
+    my_submissions: async (parent, args, context, info) => {
+      const { pgdb, user } = context
+      const user_id = user.id
+      const submissions = pgdb.public.submissions
+
+      if (!user) {
+        throw new Error(
+          'You will have to login or sign up first. No sneak peak.',
+        )
+      }
+
+      const conditions = {
+        ...(user_id && { user_id }),
+      }
+
+      return submissions.find(conditions)
+    },
   },
   Mutation: {
     vote: async (parent, args, context, info) => {

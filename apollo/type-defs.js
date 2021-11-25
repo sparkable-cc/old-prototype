@@ -63,6 +63,7 @@ const typeDefs = gql`
     me: User
     categories: [Category!]!
     submissions(stage: Stage, category_id: ID): [Submission!]!
+    my_submissions(user_id: ID): [Submission!]
   }
 
   type Mutation {

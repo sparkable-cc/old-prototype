@@ -62,8 +62,7 @@ const typeDefs = gql`
   type Query {
     me: User
     categories: [Category!]!
-    submissions(stage: Stage, category_id: ID): [Submission!]!
-    my_submissions(user_id: ID): [Submission!]
+    submissions(stage: Stage, category_id: ID, user_id: ID): [Submission!]
   }
 
   type Mutation {

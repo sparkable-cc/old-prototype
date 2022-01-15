@@ -114,35 +114,26 @@ const resolvers = {
       })
     },
     submissions: async (parent, args, context, info) => {
-      const { stage, category_id } = args
+      const { stage, category_id, user_id } = args
       const { pgdb, user } = context
       const submissions = pgdb.public.submissions
 
       if (!user) {
         throw new Error(
           'You will have to login or sign up first. No sneak peak.',
+        )
+      }
+
+      const current_user_id = user.id
+      if (user_id && current_user_id != user_id) {
+        throw new Error(
+          'No filtering on someone else\'s submissions!',
         )
       }
 
       const conditions = {
         ...(stage && { stage }),
         ...(category_id && { category_id }),
-      }
-
-      return submissions.find(conditions)
-    },
-    my_submissions: async (parent, args, context, info) => {
-      const { pgdb, user } = context
-      const user_id = user.id
-      const submissions = pgdb.public.submissions
-
-      if (!user) {
-        throw new Error(
-          'You will have to login or sign up first. No sneak peak.',
-        )
-      }
-
-      const conditions = {
         ...(user_id && { user_id }),
       }
 

@@ -1,19 +1,9 @@
-import { gql, useQuery } from '@apollo/client'
-import { LinearProgress, Grid } from '@material-ui/core'
-import { useContext } from 'react'
-import { SubmissionFragment } from './Submit'
+import { useQuery } from '@apollo/client'
+import { Typography, LinearProgress, Grid, Box } from '@material-ui/core'
 import Submission from './Submission'
+import { SUBMISSIONS } from './Submissions'
 import withMe from '../libs/withMe'
-
-export const MY_SUBMISSIONS = gql`
-  query my_submissions($user_id: ID) {
-    my_submissions(user_id: $user_id) {
-      ...SubmissionFragment
-    }
-  }
-
-  ${SubmissionFragment}
-`
+import Submit from './Submit'
 
 const MySubmissions = ( props ) => {
   const isUser = props.me ? true : false
@@ -30,28 +20,32 @@ const MySubmissions = ( props ) => {
 }
 
 export const MySubmissionList = ({ user_id }) => {
-  const { loading, data = {}, refetch } = useQuery(MY_SUBMISSIONS, {
+  const { loading, data = {}, refetch } = useQuery(SUBMISSIONS, {
     variables: { user_id },
     fetchPolicy: 'network-only',
   })
-  const { my_submissions } = data
+  const { submissions } = data
 
   console.log("loading: ", loading)
-  console.log(my_submissions)
+  console.log(submissions)
 
-  if (loading || !my_submissions) {
+  if (loading || !submissions) {
     return <LinearProgress variant="query" />
   }
 
   return (
     <>
     <Grid container spacing={4}>
-      {my_submissions.map((submission) => (
+      {submissions.map((submission) => (
       <Grid key={submission.id} item xs={12} sm={6} md={4}>
         <Submission submission={submission} />
       </Grid>
       ))}
     </Grid>
+    <Box mt={7}>
+      <Typography variant="h4">Share a Link</Typography>
+      <Submit />
+    </Box>
     </>
   )
 }

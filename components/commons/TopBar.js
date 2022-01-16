@@ -23,6 +23,7 @@ import {
   SpeakerNotes,
   GroupWork,
   Help,
+  LibraryBooks,
   Public,
   GitHub,
 } from '@material-ui/icons'
@@ -106,6 +107,12 @@ const TopBar = (props) => {
               icon={<Add />}
               label="Submit A Link"
               href="/submit"
+              hide={!isUser}
+            />
+            <NavItem
+              icon={<LibraryBooks />}
+              label="My Submissions"
+              href="/mysubmissions"
               hide={!isUser}
             />
             <Divider />

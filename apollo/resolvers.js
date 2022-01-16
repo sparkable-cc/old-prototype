@@ -114,7 +114,7 @@ const resolvers = {
       })
     },
     submissions: async (parent, args, context, info) => {
-      const { stage, category_id } = args
+      const { stage, category_id, user_id } = args
       const { pgdb, user } = context
       const submissions = pgdb.public.submissions
 
@@ -124,9 +124,17 @@ const resolvers = {
         )
       }
 
+      const current_user_id = user.id
+      if (user_id && current_user_id != user_id) {
+        throw new Error(
+          'No filtering on someone else\'s submissions!',
+        )
+      }
+
       const conditions = {
         ...(stage && { stage }),
         ...(category_id && { category_id }),
+        ...(user_id && { user_id }),
       }
 
       return submissions.find(conditions)

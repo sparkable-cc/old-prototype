@@ -8,8 +8,8 @@ import Submission from './Submission'
 import { useState } from 'react'
 
 export const SUBMISSIONS = gql`
-  query submissions($stage: Stage, $category_id: ID) {
-    submissions(stage: $stage, category_id: $category_id) {
+  query submissions($stage: Stage, $category_id: ID, $user_id: ID) {
+    submissions(stage: $stage, category_id: $category_id, user_id: $user_id) {
       ...SubmissionFragment
     }
   }

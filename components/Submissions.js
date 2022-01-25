@@ -1,7 +1,8 @@
 import { gql, useQuery } from '@apollo/client'
 import { LinearProgress, Box, Grid } from '@material-ui/core'
 import Categories from './commons/Categories'
-import Stages from './commons/Stages'
+// Remove Stage filter temporarily for all demos prior to voting
+// import Stages from './commons/Stages'
 
 import { SubmissionFragment } from './Submit'
 import Submission from './Submission'
@@ -31,9 +32,12 @@ const Submissions = (props) => {
               label="Category"
             />
           </Grid>
+          {/* 
+          Remove Stage filter temporarily for all demos prior to voting
           <Grid item>
             <Stages stage={stage} setStage={setStage} label="User Stage" />
           </Grid>
+          */}
         </Grid>
       </Box>
       <SubmissionList stage={stage} category_id={category_id} />

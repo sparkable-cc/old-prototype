@@ -17,7 +17,7 @@ import { SubmissionFragment } from './Submit'
 
 import MutationError from './commons/MutationError'
 
-import { queryWithMe } from '../libs/withMe'
+import withMe, { queryWithMe } from '../libs/withMe'
 
 const VOTE = gql`
   mutation vote($submission_id: ID!) {
@@ -129,7 +129,7 @@ const Submission = ({ submission, me }) => {
         </CardContent>
       )}
       <CardActions disableSpacing>
-        <IconButton
+        { me && <IconButton
           aria-label="add to favorites"
           onMouseOver={toggleHint}
           color={submission.meHasVoted ? 'primary' : 'default'}
@@ -137,7 +137,7 @@ const Submission = ({ submission, me }) => {
           onMouseOut={toggleHint}
         >
           <Favorite />
-        </IconButton>
+        </IconButton>}
         <IconButton aria-label="share">
           <Link
             href={`http://twitter.com/share?text=@ButterfyMe+reads+«${submission.content.title}»&url=${submission.content.url}`}
@@ -162,4 +162,4 @@ const Submission = ({ submission, me }) => {
   )
 }
 
-export default Submission
+export default withMe(Submission)

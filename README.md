@@ -25,6 +25,15 @@ This is a very early prototype of the concept developed during the Rethink Journ
 4. npm install
 5. npm run dev
 
+<!-- --- tips to "Run migrations.sql" -->
+
+docker-compose up -d
+docker images
+docker ps
+
+docker exect -it NAME_CONTAINER /bin/bash
+psql -U NAME -d NAME -f migrations.sql
+
 ## GraphQL Playground
 
 Change in settings: `"request.credentials": "same-origin"`

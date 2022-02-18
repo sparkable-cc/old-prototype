@@ -18,6 +18,7 @@ import StartAnonymous from '../components/StartAnonymous'
 import StartUser from '../components/StartUser'
 
 import styles from './index.module.css'
+import Submissions from '../components/Submissions';
 
 const LOGOUT = gql`
   mutation logout {
@@ -66,6 +67,7 @@ const IndexPage = (props) => {
   return (
     <Layout>
       <StartAnonymous />
+      <Submissions />
     </Layout>
   )
 }

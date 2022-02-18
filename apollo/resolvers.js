@@ -50,7 +50,7 @@ const resolvers = {
       const { pgdb, user } = context
       const users = pgdb.public.users
 
-      if (user.id === user_id) {
+      if (user?.id === user_id) {
         return user
       }
 
@@ -84,12 +84,12 @@ const resolvers = {
       })
     },
     meHasVoted: async (parent, args, context, info) => {
-      const { id } = parent
+      const { id } = parent || {}
       const { pgdb, user } = context
       const ballots = pgdb.public.ballots
 
       return !!(await ballots.count({
-        user_id: user.id,
+        // user_id: user?.id,
         submission_id: id,
         vote: 'yes',
       }))
@@ -101,13 +101,8 @@ const resolvers = {
       return user
     },
     categories: async (parent, args, context, info) => {
-      const { user, pgdb } = context
+      const { pgdb } = context
 
-      if (!user) {
-        throw new Error(
-          'You will have to login or sign up first. No sneak peak.',
-        )
-      }
 
       return pgdb.public.categories.findAll({
         orderBy: { title: 'ASC' },
@@ -117,19 +112,7 @@ const resolvers = {
       const { stage, category_id, user_id } = args
       const { pgdb, user } = context
       const submissions = pgdb.public.submissions
-
-      if (!user) {
-        throw new Error(
-          'You will have to login or sign up first. No sneak peak.',
-        )
-      }
-
-      const current_user_id = user.id
-      if (user_id && current_user_id != user_id) {
-        throw new Error(
-          'No filtering on someone else\'s submissions!',
-        )
-      }
+ 
 
       const conditions = {
         ...(stage && { stage }),
@@ -235,11 +218,7 @@ const resolvers = {
     },
     categoryAdd: async (parent, args, context, info) => {
       const { title } = args
-      const { pgdb, user } = context
-
-      if (!user) {
-        throw new Error('You will have to login or sign up first.')
-      }
+      const { pgdb } = context
 
       const categories = pgdb.public.categories
 

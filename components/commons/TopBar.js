@@ -26,6 +26,7 @@ import {
   LibraryBooks,
   Public,
   GitHub,
+  Bookmarks
 } from '@material-ui/icons'
 import { useRouter } from 'next/router'
 
@@ -113,6 +114,12 @@ const TopBar = (props) => {
               icon={<LibraryBooks />}
               label="My Submissions"
               href="/mysubmissions"
+              hide={!isUser}
+            />
+            <NavItem
+              icon={<Bookmarks />}
+              label="My Bookmark"
+              href="/mybookmarks"
               hide={!isUser}
             />
             <Divider />

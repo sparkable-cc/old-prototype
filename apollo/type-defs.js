@@ -58,11 +58,23 @@ const typeDefs = gql`
     votes: Int!
     meHasVoted: Boolean!
   }
+  type Bookmarks {
+    id: ID!
+    user: User!
+    content: Content!
+    category: Category!
+    date_posted: DateTime!
+    comment: String
+    stage: Stage!
+    votes: Int!
+    meHasVoted: Boolean!
+  }
 
   type Query {
     me: User
     categories: [Category!]!
     submissions(stage: Stage, category_id: ID, user_id: ID): [Submission!]
+    bookmarks(stage: Stage, category_id: ID, user_id: ID): [Submission!]
   }
 
   type Mutation {

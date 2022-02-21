@@ -70,7 +70,6 @@ const resolvers = {
       const { content_id } = parent
       const { pgdb } = context
       const contents = pgdb.public.contents
-
       return contents.findOne({ id: content_id })
     },
     votes: async (parent, args, context, info) => {
@@ -112,7 +111,7 @@ const resolvers = {
       const { stage, category_id, user_id } = args
       const { pgdb, user } = context
       const submissions = pgdb.public.submissions
- 
+
 
       const conditions = {
         ...(stage && { stage }),
@@ -122,7 +121,31 @@ const resolvers = {
 
       return submissions.find(conditions)
     },
-  },
+    bookmarks: async (parent, args, context, info) => {
+      const { stage, category_id, user_id } = args
+      const { pgdb, user } = context
+      const ballots = pgdb.public.ballots
+      const submissions = pgdb.public.submissions
+
+      if (!user) {
+        throw new Error(
+          'You will have to login or sign up first. No sneak peak.',
+        )
+      }
+
+      const conditions = {
+        ...(stage && { stage }),
+        ...(category_id && { category_id }),
+        ...(user_id && { user_id }),
+        vote: "yes"
+      }
+
+      const result = await ballots.find(conditions)
+      const ids = result.map(({ submission_id })=>submission_id)
+      const submissionsList = await submissions.findAll(ids)
+      return submissionsList
+    }
+      },
   Mutation: {
     vote: async (parent, args, context, info) => {
       const { submission_id } = args
@@ -143,27 +166,27 @@ const resolvers = {
         throw new Error('There is no such submission.')
       }
 
-      if (submission.user_id === user.id) {
-        throw new Error("Nice try. You can't vote for your own submissions.")
-      }
-
       const existingBallot = await ballots.findOne({
         user_id: user.id,
         submission_id,
       })
-      if (existingBallot) {
-        throw new Error('Computer says "no". You voted on this one already.')
-      }
 
+      if(existingBallot){
+        await ballots.removeOne({
+          user_id: user.id,
+          submission_id
+        })
+      } else {
       await ballots.insert({
         user_id: user.id,
         vote: 'yes',
         submission_id,
         stage: user.stage || 'egg',
       })
+    }
 
-      await users.updateOne({ id: user.id }, { tokens: user.tokens + 1 })
-
+      await users.updateOne({ id: user.id }, { tokens: user.tokens + (existingBallot ? -1 : 1) })
+    
       const votes = await ballots.count({
         submission_id,
         vote: 'yes',

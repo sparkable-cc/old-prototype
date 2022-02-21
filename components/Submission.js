@@ -1,12 +1,12 @@
 import { useState } from 'react'
-import { makeStyles } from '@material-ui/core/styles'
+import { makeStyles, withStyles } from '@material-ui/core/styles'
 import clsx from 'clsx'
 import { Card, CardHeader, CardMedia, MenuItem } from '@material-ui/core'
 import { CardContent, CardActions } from '@material-ui/core'
 import { Collapse, Avatar, IconButton } from '@material-ui/core'
-import { Typography, Link, Menu } from '@material-ui/core'
+import { Typography, Link, Menu, Tooltip } from '@material-ui/core'
 import { red } from '@material-ui/core/colors'
-import { Favorite, Share, MoreVert } from '@material-ui/icons'
+import { Bookmark, Share, MoreVert } from '@material-ui/icons'
 // import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import { formatDate } from '../libs/date'
 import { useRouter } from 'next/router'
@@ -18,6 +18,15 @@ import { SubmissionFragment } from './Submit'
 import MutationError from './commons/MutationError'
 
 import withMe, { queryWithMe } from '../libs/withMe'
+
+const LightTooltip = withStyles((theme) => ({
+  tooltip: {
+    backgroundColor: theme.palette.common.white,
+    color: 'rgba(0, 0, 0, 0.87)',
+    boxShadow: theme.shadows[1],
+    fontSize: 11,
+  },
+}))(Tooltip);
 
 const VOTE = gql`
   mutation vote($submission_id: ID!) {
@@ -57,6 +66,7 @@ const Submission = ({ submission, me }) => {
   const classes = useStyles()
   const [hint, setHint] = useState(false)
   const [anchorEl, setAnchorEl] = useState(null)
+
   const [vote, { loading: voteLoading, error: voteError }] = useMutation(VOTE, {
     variables: { submission_id: submission.id },
     errorPolicy: 'all',
@@ -129,15 +139,16 @@ const Submission = ({ submission, me }) => {
         </CardContent>
       )}
       <CardActions disableSpacing>
-        { me && <IconButton
-          aria-label="add to favorites"
-          onMouseOver={toggleHint}
-          color={submission.meHasVoted ? 'primary' : 'default'}
-          onClick={vote}
-          onMouseOut={toggleHint}
-        >
-          <Favorite />
-        </IconButton>}
+        { me && 
+        <LightTooltip title={`${submission.meHasVoted ? 'Remove' : 'Add'} to bookmark`} placement="bottom-start">
+          <IconButton
+            aria-label={`add to bookmark`}
+            color={submission.meHasVoted ? 'primary' : 'default'}
+            onClick={vote}
+          >
+            <Bookmark />
+          </IconButton>
+        </LightTooltip> }
         <IconButton aria-label="share">
           <Link
             href={`http://twitter.com/share?text=@ButterfyMe+reads+«${submission.content.title}»&url=${submission.content.url}`}
@@ -156,7 +167,7 @@ const Submission = ({ submission, me }) => {
       <MutationError
         title="Nope."
         content="That did not work as planned. Sorry."
-        apolloError={voteError}
+        // apolloError={voteError}
       />
     </Card>
   )
